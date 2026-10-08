@@ -1,0 +1,21 @@
+{
+  "name": "y-si-pasa-hoy",
+  "version": "1.0.0",
+  "private": true,
+  "description": "¿Y si pasa hoy? — juego serio de ARCADE para crear hábitos frente a El Niño y otros desastres en la Zona Occidente y Dosquebradas.",
+  "type": "module",
+  "engines": {
+    "node": ">=20.6"
+  },
+  "scripts": {
+    "start": "node servidor-jefe/server.js",
+    "dev:web": "node servidor-jefe/server.js --dev",
+    "dev:web:ia": "node --env-file=servidor-jefe/simulador/simulador.env servidor-jefe/server.js --dev",
+    "dev:simulador": "node servidor-jefe/simulador/mock-anthropic.js",
+    "agente": "node agente-el-jefe/construir.js",
+    "sprites": "node herramientas/exportar-sprites.js",
+    "test": "node --test \"pruebas/unit/*.test.js\" \"servidor-jefe/pruebas/*.test.js\"",
+    "test:juego": "node --test \"pruebas/unit/*.test.js\"",
+    "test:servidor": "node --test \"servidor-jefe/pruebas/*.test.js\""
+  }
+}

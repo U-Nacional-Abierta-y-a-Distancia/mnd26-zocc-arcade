@@ -1,0 +1,39 @@
+{
+  "version": "1.0.8",
+  "id": "a9d0bed2-ac53-4a5a-bd8b-284acbf6549a",
+  "developer": {
+    "name": "Natalia Elizabeth Pérez Cabrera",
+    "websiteUrl": "https://go.microsoft.com/fwlink/?linkid=2352565",
+    "privacyUrl": "https://go.microsoft.com/fwlink/?linkid=2138865",
+    "termsOfUseUrl": "https://go.microsoft.com/fwlink/?linkid=2138950"
+  },
+  "name": {
+    "short": "EL JEFE",
+    "full": "EL JEFE"
+  },
+  "description": {
+    "short": "Ayuda de ¿Y si pasa hoy?, juego serio de ARCADE",
+    "full": "Asistente de ayuda de «¿Y si pasa hoy?», juego serio de ARCADE para familias de la Zona Occidente y Dosquebradas. Orienta sobre cómo usar el juego (acceso, retos, insignias, mochila, familia, ranking, instalación) y prioriza siempre la seguridad: ante una emergencia real, suspende el juego y indica llamar al 123."
+  },
+  "icons": {
+    "outline": "outline.png",
+    "color": "color.png"
+  },
+  "accentColor": "#E0F6FC",
+  "validDomains": [
+    "*.botframework.com",
+    "*.*.botframework.com",
+    "copilotstudio.microsoft.com",
+    "copilotstudio.preview.microsoft.com"
+  ],
+  "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.28/MicrosoftTeams.schema.json",
+  "manifestVersion": "1.28",
+  "copilotAgents": {
+    "declarativeAgents": [
+      {
+        "id": "a9d0bed2-ac53-4a5a-bd8b-284acbf6549a.gpt.23fbea3f-fcd2-4fa0-a56a-577edcd2f1a4",
+        "file": "declarativeAgent_0.json"
+      }
+    ]
+  }
+}

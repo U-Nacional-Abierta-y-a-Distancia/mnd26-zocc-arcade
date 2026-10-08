@@ -1,0 +1,17 @@
+/* ======================================================================
+   Variables de diseño (tokens)
+   Paleta: Void Black + un solo acento Cyber Cyan; el naranja aparece SOLO en los enemigos (--foe).
+   ====================================================================== */
+:root{
+  color-scheme: dark;
+  --void:#050505; --cyan:#99FFFF; --white:#FFFFFF; --slate:#9B9F9F;
+  --foe:#FF8A3D;                       /* aviso: solo enemigos */
+  --panel:#0a1011; --panel-2:#0f1a1b;
+  --line:rgba(153,255,255,.22); --line-strong:rgba(153,255,255,.6); --cyan-soft:rgba(153,255,255,.12);
+  --glow:0 0 22px rgba(153,255,255,.35);
+  --font-display:'HK Modular','Orbitron',system-ui,sans-serif;
+  --font-body:'Poppins',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --fs-hero:clamp(2rem,6vw,4.4rem); --fs-h2:clamp(1.5rem,4vw,2.6rem); --fs-h3:clamp(1.05rem,2.2vw,1.35rem); --fs-body:clamp(.95rem,1.4vw,1.05rem);
+  --gutter:clamp(16px,4vw,56px); --maxw:1240px;
+  --tabh:0px;
+}

@@ -1,0 +1,44 @@
+/* ======================================================================
+   Cabecera y navegación
+   Barra superior, marca, menú de la portada, indicador de insignia y menú hamburguesa de la zona de juego.
+   ====================================================================== */
+/* ---------- Cabecera ---------- */
+.nav{position:sticky;top:0;z-index:50;background:rgba(5,5,5,.9);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:64px;position:relative}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--white);background:none;border:0;padding:0}
+.brand img{width:auto;height:30px}
+.brand b{font-family:var(--font-display);font-weight:900;font-size:1.25rem;letter-spacing:.06em;white-space:nowrap}
+.brand small{display:none;font-family:var(--font-display);font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan);align-self:flex-end;margin-bottom:6px}
+@media (min-width:1100px){.brand small{display:inline}}
+@media (max-width:420px){.brand b{font-size:.78rem}}
+.links{display:flex;align-items:center;gap:clamp(12px,2.2vw,28px);list-style:none;margin:0;padding:0}
+.links a,.links button.lk{font-family:var(--font-display);font-size:.7rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#d9dede;text-decoration:none;padding:8px 2px;border:0;border-bottom:2px solid transparent;background:none}
+.links a:hover,.links button.lk:hover{color:var(--cyan);border-bottom-color:var(--cyan)}
+.scrollbar{position:absolute;left:0;bottom:-1px;height:2px;width:calc(var(--p,0) * 1%);background:var(--cyan);box-shadow:var(--glow)}
+.xp-chip{display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--cyan);white-space:nowrap}
+.xp-chip i{display:block;width:clamp(56px,9vw,120px);height:8px;border:1px solid var(--line-strong);position:relative}
+.xp-chip i::after{content:"";position:absolute;inset:1px;width:calc(var(--p,0) * 1%);background:var(--cyan);box-shadow:var(--glow)}
+.menu-btn{display:none;background:transparent;border:2px solid var(--line-strong);width:48px;height:44px;align-items:center;justify-content:center}
+.menu-btn span,.menu-btn span::before,.menu-btn span::after{display:block;width:20px;height:2px;background:var(--cyan);position:relative;content:""}
+.menu-btn span::before{position:absolute;top:-7px}.menu-btn span::after{position:absolute;top:7px}
+@media (max-width:900px){
+  .menu-btn{display:inline-flex}
+  #landLinks{position:absolute;left:0;right:0;top:100%;flex-direction:column;align-items:stretch;gap:0;background:var(--void);border-bottom:1px solid var(--line);padding:8px var(--gutter) 16px;display:none}
+  #landLinks.open{display:flex}
+  #landLinks a,#landLinks button.lk{display:block;text-align:left;padding:14px 0;border-bottom:1px solid var(--line);font-size:.8rem}
+  .xp-chip .t{display:none}
+}
+
+/* Zona de juego: insignia a la derecha y botón hamburguesa (siempre visible, también en pantallas anchas). */
+.app-right{display:flex;align-items:center;gap:12px}
+.app-menu-btn{display:inline-flex}
+
+/* Menú desplegable con las seis secciones del juego. */
+.apptabs{display:none;position:absolute;right:var(--gutter);top:calc(100% + 6px);z-index:90;flex-direction:column;gap:4px;width:min(300px,calc(100vw - 32px));padding:8px;background:rgba(10,16,17,.98);border:1px solid var(--line-strong);box-shadow:var(--glow),0 14px 40px rgba(0,0,0,.6)}
+.apptabs.open{display:flex;animation:menuin .18s ease-out}
+@keyframes menuin{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.apptabs button{display:inline-flex;align-items:center;justify-content:flex-start;gap:14px;width:100%;min-height:52px;padding:10px 16px;background:transparent;border:1px solid var(--line);font-family:var(--font-display);font-size:.76rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#d9dede}
+.apptabs button:hover{border-color:var(--cyan);color:var(--cyan)}
+.apptabs button[aria-current="page"]{background:var(--cyan);border-color:var(--cyan);color:var(--void)}
+.apptabs svg{width:20px;height:20px;fill:currentColor;flex:none}
+@media (prefers-reduced-motion:reduce){.apptabs.open{animation:none}}

@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>¿Y si pasa hoy? · un juego serio de ARCADE</title>
+<meta name="description" content="¿Y si pasa hoy? es un juego serio de ARCADE: hábitos diarios para enfrentar El Niño y otros desastres en la Zona Occidente y Dosquebradas.">
+<meta name="theme-color" content="#050505">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="jefe-api" content="/api/jefe">
+<link rel="icon" href="assets/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/icon-192.png">
+<link rel="stylesheet" href="css/00-tokens.css">
+<link rel="stylesheet" href="css/01-base.css">
+<link rel="stylesheet" href="css/02-botones.css">
+<link rel="stylesheet" href="css/03-cabecera.css">
+<link rel="stylesheet" href="css/04-portada.css">
+<link rel="stylesheet" href="css/05-personajes.css">
+<link rel="stylesheet" href="css/06-juego.css">
+<link rel="stylesheet" href="css/07-mochila.css">
+<link rel="stylesheet" href="css/08-ranking.css">
+<link rel="stylesheet" href="css/09-insignias.css">
+<link rel="stylesheet" href="css/10-ventanas.css">
+<link rel="stylesheet" href="css/11-familia.css">
+<link rel="stylesheet" href="css/12-chat.css">
+<link rel="stylesheet" href="css/13-presentacion.css">
+<link rel="stylesheet" href="css/14-pie-y-avisos.css">
+</head>
+<body>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800;900&family=Poppins:wght@300;400;500;600;700&display=swap">
+
+
+<div id="splash" role="dialog" aria-modal="true" aria-label="Presentación del equipo y del juego">
+  <button class="splash-skip" type="button">Saltar</button>
+
+  <section class="sp-stage on" id="sp1">
+    <img class="sp-logo" src="assets/logo-arcade.png" alt="Logotipo de ARCADE Semillero: un mando de videojuegos, un cubo con flecha ascendente y píxeles cian" width="2048" height="2048">
+    <p class="sp-team">El equipo <b>ARCADE</b> está conformado por los profesores <b>Natalia Elizabeth Pérez</b>, <b>Henrry Borrero</b>, <b>Jaime Jose Garcia</b> y <b>Nelson Serna</b>, y la estudiante semillerista <b>Valentina Rengifo</b>, quienes participan en el reto de las <b>Olimpiadas Unadistas</b>.</p>
+    <div class="sp-olimp"><img src="assets/logo-olimpiadas.webp" alt="Logotipo de las Olimpiadas Unadistas" width="320" height="320"></div>
+    <div class="sp-bar" role="progressbar" aria-label="Cargando la presentación" aria-valuemin="0" aria-valuemax="100"><i></i></div>
+  </section>
+
+  <section class="sp-stage" id="sp2">
+    <p class="sp-load" aria-live="polite">Cargando el juego…</p>
+    <div class="sp-bar slim" aria-hidden="true"><i></i></div>
+    <p class="display sp-title">¿Y si pasa hoy?</p>
+    <div class="sp-block" data-i="0">
+      <h2>¿Para quién es?</h2>
+      <p>Para las familias de la Zona Occidente y Dosquebradas: hogares que quieren prepararse juntos, desde casa, para El Niño y otros desastres.</p>
+    </div>
+    <div class="sp-block" data-i="1">
+      <h2>¿En qué consiste?</h2>
+      <p>Es un juego serio: cumples hábitos diarios, ganas insignias como las de los exploradores y compites con tu familia en un ranking, con EL JEFE y sus salvadores como apoyo.</p>
+    </div>
+    <ul class="sp-chips" data-i="2" aria-label="Los cinco niveles">
+      <li>Agua</li><li>Energía</li><li>Calor</li><li>Fuego</li><li>Sismo</li>
+    </ul>
+    <button class="btn sp-enter" type="button">Entrar al juego</button>
+  </section>
+</div>
+
+<a class="skip" href="#contenido">Saltar al contenido</a>
+
+<header class="nav">
+  <div class="wrap">
+    <button class="brand" data-go="home" aria-label="¿Y si pasa hoy?, un juego de ARCADE. Ir a la portada"><img src="assets/icon-game.webp" alt="" width="36" height="30"><b>¿Y si pasa hoy?</b><small>por ARCADE</small></button>
+    <nav aria-label="Portada" id="landNav" style="display:contents">
+      <ul class="links" id="landLinks">
+        <li><button class="lk" data-scroll="como">Cómo se juega</button></li>
+        <li><button class="lk" data-scroll="mas">Saber más</button></li>
+        <li><button class="btn sm" data-go="retos" style="clip-path:none">Entrar al juego</button></li>
+      </ul>
+      <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="landLinks" aria-label="Abrir menú"><span></span></button>
+    </nav>
+    <nav aria-label="Zona de juego" id="appNav" style="display:contents" hidden>
+      <div class="apptabs" id="tabs" role="menu" aria-label="Secciones del juego">
+        <button data-go="retos"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v4H4zm0 6h10v4H4zm0 6h16v4H4z"/></svg><span>Retos</span></button>
+        <button data-go="mochila"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 2h6v3h-1V4h-4v1H9zM6 6h12v16H6zm2 6v2h8v-2z"/></svg><span>Mochila</span></button>
+        <button data-go="agentes"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3h8v2h2v6h-2v2h-2v2h2v2h4v4H4v-4h4v-2h2v-2H8v-2H6V5h2z"/></svg><span>Agentes</span></button>
+        <button data-go="familia"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4a3 3 0 110 6 3 3 0 010-6zm8 1a2.5 2.5 0 110 5 2.5 2.5 0 010-5zM2 19v-2c0-2.2 2.7-4 6-4s6 1.8 6 4v2zm13-5.5c3 .2 7 1.2 7 3.5v2h-6v-2c0-1.4-.4-2.6-1-3.5z"/></svg><span>Familia</span></button>
+        <button data-go="ranking"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h5v9H3zm7-8h5v17h-5zm7 5h4v12h-4z"/></svg><span>Ranking</span></button>
+      </div>
+      <div class="app-right">
+        <div class="xp-chip" aria-label="Tu progreso"><span class="t" id="chipRank">Aspirante</span><i id="chipBar"></i><b id="chipXp">0 XP</b></div>
+        <button class="menu-btn app-menu-btn" id="appMenuBtn" type="button" aria-expanded="false" aria-controls="tabs" aria-label="Abrir el menú del juego"><span></span></button>
+      </div>
+    </nav>
+  </div>
+  <div class="scrollbar" id="scrollbar" aria-hidden="true"></div>
+</header>
+
+<main id="contenido">
+
+<!-- ============ PORTADA ============ -->
+<div id="home">
+
+<section class="hero" aria-labelledby="h-hero">
+  <div class="wrap grid">
+    <div>
+      <p class="label">Un juego serio de ARCADE · Zona Occidente y Dosquebradas</p>
+      <div class="bar"></div>
+      <h1 class="display" id="h-hero">¿Y si pasa hoy?</h1>
+    </div>
+    <div class="hero-art">
+      <canvas id="particles" aria-hidden="true"></canvas>
+      <img src="assets/icon-game.webp" alt="Ícono del juego: un cubo sobre una base" width="524" height="440">
+    </div>
+    <ul class="hero-line" aria-label="Lo esencial del juego"><li><button type="button" data-scroll="como">Cómo se juega</button></li><li>5 niveles</li><li>6 hábitos por nivel<span class="opt"> para cada jugador</span></li><li>Ranking familiar</li></ul>
+  </div>
+</section>
+
+<section class="cta-top" aria-labelledby="h-cta">
+  <div class="wrap cta-band">
+    <h2 class="display" id="h-cta">Empieza hoy con un solo hábito</h2>
+    <button class="btn" data-go="retos">Entrar al juego</button>
+  </div>
+</section>
+
+<section class="alt como-mini" id="como" aria-label="Cómo se juega">
+  <div class="wrap">
+    <ol class="steps-mini">
+      <li><b>1 · Marca tus hábitos</b><span>Cada uno le quita vida al enemigo.</span></li>
+      <li><b>2 · Gana insignias</b><span>Cada nivel completo te acerca a la siguiente.</span></li>
+      <li><b>3 · Juega en familia</b><span>Mira quién va mejor y quién necesita ayuda.</span></li>
+    </ol>
+  </div>
+</section>
+
+<section class="alt" id="mas" aria-labelledby="h-mas">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2 class="label" id="h-mas">Saber más</h2>
+    </div>
+    <div class="acc">
+      <details>
+        <summary>¿Qué es y para qué se usa?</summary>
+        <div class="acc-body"><div class="trio">
+      <article class="card"><span class="n" aria-hidden="true">?</span><h3>Qué es</h3><p>Una app-juego donde cada hábito cotidiano es un movimiento contra un enemigo. Marcas lo que haces hoy, el enemigo pierde fuerza y tu ranking sube.</p></article>
+      <article class="card"><span class="n" aria-hidden="true">!</span><h3>Para qué se usa</h3><p>Para que las personas de la Zona Occidente y Dosquebradas conviertan las recomendaciones de las autoridades en rutinas pequeñas y constantes: cuidar el agua, la energía, evitar el fuego y tener lista la mochila de emergencia.</p></article>
+      </div></div>
+      </details>
+      <details id="el-nino">
+        <summary>El Niño en la Zona Occidente y Dosquebradas</summary>
+        <div class="acc-body"><p class="lede">El fenómeno es la razón de ser de este juego: menos lluvia, más calor y más presión sobre el agua y la energía. Lo que hagamos en casa, todos los días, cuenta.</p><div class="stats">
+      <div class="stat"><b>96%</b><span>probabilidad de que El Niño se mantenga entre diciembre de 2026 y febrero de 2027, según el IDEAM (boletín 212, 22 may 2026)</span></div>
+      <div class="stat"><b>63%</b><span>probabilidad de que alcance intensidad muy fuerte, entre los más intensos desde 1950</span></div>
+      <div class="stat"><b>Nov–Ene</b><span>periodo crítico para el Eje Cafetero: menos lluvia, caudales bajos y más evapotranspiración</span></div>
+      <div class="stat"><b>1.092 ha</b><span>de café en Dosquebradas en 2026, todas susceptibles al déficit hídrico</span></div>
+    </div>
+    <div class="two">
+      <div>
+        <h3 class="sub">Qué trae El Niño</h3>
+        <ul class="map">
+          <li><span>Menos lluvia y más calor</span><span>Caudales y acuíferos bajan</span></li>
+          <li><span>Suelos y coberturas secas</span><span>Mayor riesgo de incendios</span></li>
+          <li><span>Menos agua en embalses</span><span>Presión sobre la energía</span></li>
+          <li><span>Humo y calor</span><span>Peor calidad del aire</span></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="sub">Cómo aporta el juego</h3>
+        <ul class="map">
+          <li><span>Recomendación oficial</span><span>Reto en el juego</span></li>
+          <li><span>Reparar fugas y ahorrar agua</span><span>Zona Agua</span></li>
+          <li><span>Reforzar el ahorro de energía</span><span>Zona Energía</span></li>
+          <li><span>Evitar quemas abiertas</span><span>Nivel Fuego</span></li>
+          <li><span>Prevenir emergencias</span><span>Zona Sismo y mochila</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 class="sub" style="margin-top:34px">Riesgos por territorio</h3>
+    <p class="note" style="margin:0 0 14px;max-width:80ch">El juego se dirige a la <b>Zona Occidente (ZOCC) de la UNAD</b>, que reúne Antioquia, Caldas, Quindío, Chocó y Pereira, y a <b>Dosquebradas</b>. El riesgo no es igual en todos los territorios, pero los hábitos para enfrentarlo son los mismos.</p>
+    <div class="tabla-wrap">
+      <table class="riesgos">
+        <caption class="sr-only">Riesgos asociados a El Niño en Dosquebradas y en el resto de la Zona Occidente, con sus fuentes</caption>
+        <thead>
+          <tr><th scope="col">Variable / Impacto</th><th scope="col">Municipio de Dosquebradas</th><th scope="col">Resto de la Zona Occidente UNAD (Antioquia, Caldas, Quindío, Chocó y Pereira)</th><th scope="col">Fuentes oficiales / institucionales</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Riesgo por desabastecimiento de agua</th>
+            <td data-label="Municipio de Dosquebradas"><b>Nivel crítico/muy alto:</b> sin fuentes hídricas de gran caudal propias; alta dependencia de compra de agua en bloque y vulnerabilidad extrema en decenas de acueductos comunitarios veredales.</td>
+            <td data-label="Resto de la Zona Occidente"><b>Vulnerabilidad alta:</b> sectores rurales dispersos en el <b>Chocó</b> e infraestructura del <b>Eje Cafetero</b> registran caídas de hasta el 40 % en caudales reguladores de cuencas menores.</td>
+            <td data-label="Fuentes"><a href="https://www.minvivienda.gov.co" target="_blank" rel="noopener">Ministerio de Vivienda, Ciudad y Territorio</a> / Boletines climáticos del <a href="https://www.ideam.gov.co" target="_blank" rel="noopener">IDEAM</a>.</td>
+          </tr>
+          <tr>
+            <th scope="row">Amenaza de deslizamientos activos (suelos saturados)</th>
+            <td data-label="Municipio de Dosquebradas"><b>Alerta naranja:</b> inestabilidad moderada-alta en laderas periféricas urbanas y zonas de interfaz urbano-rural.</td>
+            <td data-label="Resto de la Zona Occidente"><b>Alerta roja:</b> cuencas altas y laderas inestables post-sismo en <b>Pereira, Pueblo Rico y Mistrató (Risaralda)</b>, así como zonas de alta pendiente en el suroeste de <b>Antioquia</b>.</td>
+            <td data-label="Fuentes">Boletines diarios de alerta del <a href="https://www.ideam.gov.co" target="_blank" rel="noopener">IDEAM</a> / Análisis de vulnerabilidad territorial de la ONU (<a href="https://reliefweb.int" target="_blank" rel="noopener">ReliefWeb</a>).</td>
+          </tr>
+          <tr>
+            <th scope="row">Peligro de incendios de la cobertura vegetal</th>
+            <td data-label="Municipio de Dosquebradas"><b>Alto impacto urbano-rural:</b> alta sensación térmica y propensión a incendios en zonas de pastizales periféricos (como laderas de Frailes o la Comuna 9).</td>
+            <td data-label="Resto de la Zona Occidente"><b>Alerta generalizada:</b> riesgo elevado en coberturas vegetales del suroeste de <b>Antioquia</b> y bosques secos interandinos de <b>Caldas</b> y <b>Quindío</b> por temperaturas superiores al promedio.</td>
+            <td data-label="Fuentes"><a href="https://dnbc.gov.co" target="_blank" rel="noopener">Dirección Nacional de Bomberos de Colombia</a> / Boletines diarios del <a href="https://www.ideam.gov.co" target="_blank" rel="noopener">IDEAM</a>.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note" style="margin-top:12px;max-width:80ch">Los niveles de alerta y las cifras cambian con cada boletín. Consulta siempre el <a href="https://www.ideam.gov.co" target="_blank" rel="noopener">IDEAM</a> y la gestión del riesgo de tu municipio antes de tomar decisiones.</p>
+    <p class="note" style="margin-top:22px;max-width:80ch">La Zona Occidente y Dosquebradas, con el Eje Cafetero, también conviven con sismos y lluvias intensas, por eso la app incluye la mochila de emergencia y no solo los hábitos de El Niño.</p>
+    <p class="sources">Fuentes: <a href="https://www.bluradio.com/nacion/gobierno-confirma-inicio-de-el-nino-y-advierte-posible-intensificacion-a-finales-de-2026-rg10" target="_blank" rel="noopener">Blu Radio, confirmación del Gobierno</a> · <a href="https://unisarc.edu.co/wp-content/uploads/2026/09/Boletin-El-Nino-2026-UGEMA.pdf" target="_blank" rel="noopener">Boletín El Niño 2026, UNISARC (UGEMA)</a> · <a href="https://www.ideam.gov.co" target="_blank" rel="noopener">IDEAM</a> · <a href="https://www.minvivienda.gov.co" target="_blank" rel="noopener">Ministerio de Vivienda, Ciudad y Territorio</a> · <a href="https://reliefweb.int" target="_blank" rel="noopener">ReliefWeb</a> · <a href="https://dnbc.gov.co" target="_blank" rel="noopener">Dirección Nacional de Bomberos de Colombia</a>. Cifras de octubre de 2026; se actualizan con los boletines del IDEAM.</p></div>
+      </details>
+      <details id="agentes">
+        <summary>EL JEFE y sus salvadores</summary>
+        <div class="acc-body">
+          <div id="homeJefe"></div>
+          <div class="duels" id="homeDuels"></div>
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="dl" id="descarga" aria-labelledby="h-desc">
+  <div class="wrap">
+    <h2 class="dl-t" id="h-desc">Llévalo en tu bolsillo</h2>
+    <div class="dl-row">
+      <p><button class="dl-b" id="pwaBtn" type="button" hidden>Instalar la app</button><span id="pwaMsg"></span></p>
+      <p><span class="dl-b dl-soon" id="apkBtn" aria-disabled="true">Descargar APK</span><span id="apkMsg">Próximamente: propuesta de desarrollo futuro.</span></p>
+      <p><span>iPhone: Safari → Compartir → «Añadir a pantalla de inicio».</span></p>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<!-- ============ ZONA INTERNA ============ -->
+<div id="appView" hidden>
+  <div class="wrap app">
+
+    <section id="v-retos" aria-labelledby="t-retos" style="padding:0" hidden>
+      <div class="view-head">
+        <p class="label" id="dateLabel"></p>
+        <h1 class="display" id="t-retos">Retos de hoy</h1>
+        <p class="lede">Marca los hábitos que cumples. Cada uno le quita vida al enemigo; al completar los 6 de un nivel llegan 6 nuevos.</p>
+        <p class="note" style="margin-top:8px">Cada nivel que completas te da XP y te acerca a la siguiente <button type="button" class="chip" data-go="ranking" style="min-height:36px;padding:4px 12px">insignia</button></p>
+      </div>
+      <div class="today" id="today"></div>
+      <div class="zones" id="zones"></div>
+    </section>
+
+    <section id="v-mochila" aria-labelledby="t-mochila" style="padding:0" hidden>
+      <div class="view-head">
+        <p class="label">Con Sismo</p>
+        <h1 class="display" id="t-mochila">Tu mochila de emergencia</h1>
+        <p class="lede">Un kit listo ayuda ante un sismo, un deslizamiento o un corte de servicios. Marca cada ítem cuando ya lo tengas guardado.</p>
+      </div>
+      <div class="kit">
+        <aside class="pack" aria-label="Estado de la mochila">
+          <canvas id="packCv" role="img" aria-label="Mochila que se llena a medida que marcas ítems"></canvas>
+          <div class="pct" id="packPct">0%</div>
+          <div class="track" id="packTrack"></div>
+          <span class="note" id="packCount">0 de 0 ítems</span>
+          <div class="family">
+            <span class="label" style="font-size:.6rem">Personas en casa</span>
+            <button class="step" id="famMinus" aria-label="Una persona menos">−</button>
+            <output id="famN" aria-live="polite">3</output>
+            <button class="step" id="famPlus" aria-label="Una persona más">+</button>
+          </div>
+          <div class="sismo-say"><img id="sismoSay" src="assets/personaje-sismo.webp" alt="" width="64" height="81"><p id="packMsg"></p></div>
+        </aside>
+        <div id="kitList"></div>
+      </div>
+    </section>
+
+    <section id="v-agentes" aria-labelledby="t-agentes" style="padding:0" hidden>
+      <div class="view-head">
+        <p class="label">Tu agente con IA</p>
+        <h1 class="display" id="t-agentes">EL JEFE y sus salvadores</h1>
+        <p class="lede">Conoce a EL JEFE, que te acompaña, al salvador de cada reto y al enemigo que enfrenta.</p>
+      </div>
+      <div id="appJefe"></div>
+      <div class="duels" id="appDuels"></div>
+      <p class="note" style="margin-top:18px;max-width:80ch">Concepto: los mensajes de las tarjetas de EL JEFE y sus salvadores están escritos de antemano. El chat de EL JEFE conversa con IA cuando hay un servidor conectado; si no, responde con frases predefinidas.</p>
+    </section>
+
+    <section id="v-familia" aria-labelledby="t-familia" style="padding:0" hidden>
+      <div class="view-head">
+        <p class="label">Juega en equipo</p>
+        <h1 class="display" id="t-familia">Mi familia</h1>
+        <p class="lede">Inscribe a tu familia con un nickname por integrante. Todos hacen los hábitos y el ranking familiar muestra quién va mejor y quién necesita una mano.</p>
+      </div>
+      <div id="famBox"></div>
+      <p class="note" style="margin-top:18px;max-width:80ch">En este prototipo la familia comparte el dispositivo: cada integrante toca «Jugar como…» para marcar sus hábitos. En la versión final cada persona jugará desde su propio celular y el ranking se sincronizará. Los nicknames se guardan solo en este dispositivo.</p>
+    </section>
+
+    <section id="v-ranking" aria-labelledby="t-ranking" style="padding:0" hidden>
+      <div class="view-head">
+        <p class="label">Tu progreso</p>
+        <h1 class="display" id="t-ranking">Ranking e insignias</h1>
+        <p class="lede">Cada hábito suma XP y, al repetirlos, subes de insignia como un explorador. Aquí ves tu insignia, tu racha, tu semana y el dominio de cada nivel.</p>
+      </div>
+      <div class="rank-top">
+        <div class="rank-card">
+          <span class="label">Insignia actual</span>
+          <div class="rank-id"><span id="rkBadge"></span><div><div class="rn" id="rkName">Aspirante</div><p class="note" id="rkLema"></p></div></div>
+          <div class="xpbar" id="rkBar"></div>
+          <p id="rkNext" class="note"></p>
+          <div class="today" style="margin:6px 0 0" id="rkKpis"></div>
+        </div>
+        <div class="week">
+          <h2 class="sub" style="margin:0">Últimos 7 días</h2>
+          <div class="bars" id="bars" role="img" aria-label="Hábitos marcados por día en los últimos 7 días"></div>
+        </div>
+      </div>
+      <div class="mast">
+        <h2 class="sub" style="margin:0">Dominio esta semana</h2>
+        <div id="mast"></div>
+      </div>
+      <div style="margin-bottom:clamp(24px,4vw,44px)">
+        <h2 class="sub">Tu escalera de insignias</h2>
+        <ul class="ladder" id="ladder"></ul>
+      </div>
+      <p class="note" style="margin-top:22px;max-width:80ch">Este ranking compara tu progreso contigo mismo y se guarda en este dispositivo. Una clasificación entre vecinos o instituciones necesita cuentas y un servidor, y queda para la versión final.</p>
+      <div class="resetrow"><button class="btn ghost sm" id="resetAll">Reiniciar mi progreso</button><span class="note" id="resetNote" aria-live="polite"></span></div>
+    </section>
+
+  </div>
+</div>
+
+</main>
+
+<footer>
+  <div class="wrap grid">
+    <img src="assets/img3.webp" alt="" width="84" height="73">
+    <p>¿Y si pasa hoy? es un juego serio diseñado por ARCADE. Prototipo de app-juego de hábitos frente a El Niño en la Zona Occidente y Dosquebradas. EL JEFE, los salvadores y los enemigos son conceptos en desarrollo; los consejos de seguridad son generales y no reemplazan las indicaciones de la gestión del riesgo municipal.</p>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<canvas class="burst" id="burst" aria-hidden="true"></canvas>
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

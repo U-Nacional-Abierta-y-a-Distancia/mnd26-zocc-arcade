@@ -1,0 +1,35 @@
+/* ======================================================================
+   Presentación inicial
+   Dos pantallas antes de la portada: equipo y Olimpiadas (5 s) y el juego (7 s). Tiempos en js/config.js.
+   ====================================================================== */
+/* ===== Presentación inicial ===== */
+body.splash-on{overflow:hidden}
+#splash{position:fixed;inset:0;z-index:300;background:var(--void);display:grid;place-items:center;padding:20px;overflow:hidden;transition:opacity .5s ease}
+#splash::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(153,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(153,255,255,.05) 1px,transparent 1px);background-size:44px 44px;pointer-events:none}
+#splash.out{opacity:0;pointer-events:none}
+.splash-skip{position:absolute;top:calc(14px + env(safe-area-inset-top,0px));right:16px;z-index:2;min-height:44px;padding:0 18px;background:transparent;border:1px solid var(--line-strong);font-family:var(--font-display);font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--cyan)}
+.sp-stage{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:clamp(10px,2.2vh,20px);padding:56px 20px 24px;text-align:center}
+.sp-stage.on{display:flex;animation:spin .6s ease-out}
+@keyframes spin{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.sp-logo{width:auto;height:auto;max-height:42vh;max-width:min(520px,82vw);object-fit:contain;filter:drop-shadow(0 0 28px rgba(153,255,255,.25))}
+.sp-team{max-width:62ch;margin:0;font-size:clamp(.88rem,1.6vw,1.05rem);line-height:1.6;color:#d3d8d8}
+.sp-team b{color:var(--white);font-weight:600}
+.sp-olimp{width:clamp(96px,16vh,140px);aspect-ratio:1;display:grid;place-items:center}
+.sp-olimp img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 0 14px rgba(255,255,255,.22))}
+.sp-bar{width:min(420px,78vw);height:10px;border:1px solid var(--line-strong);padding:1px}
+.sp-bar i{display:block;height:100%;width:0;background:var(--cyan);box-shadow:var(--glow)}
+#splash.run1 #sp1 .sp-bar i{width:100%;transition:width 5s linear}
+#splash.run2 #sp2 .sp-bar i{width:100%;transition:width 7s linear}
+.sp-bar.slim{height:6px;width:min(280px,60vw)}
+.sp-load{margin:0;font-family:var(--font-display);font-size:.7rem;letter-spacing:.26em;text-transform:uppercase;color:var(--cyan)}
+.sp-title{margin:6px 0 0;font-size:clamp(1.8rem,6vw,3.6rem);color:var(--white)}
+.sp-block,.sp-chips{opacity:0;transform:translateY(12px);transition:opacity .5s ease,transform .5s ease;max-width:58ch}
+.sp-block.in,.sp-chips.in{opacity:1;transform:none}
+.sp-block{border-left:3px solid var(--cyan);padding:2px 0 2px 16px;text-align:left}
+.sp-block h2{margin:0 0 2px;font-family:var(--font-display);font-size:.8rem;letter-spacing:.18em;text-transform:uppercase;color:var(--cyan)}
+.sp-block p{margin:0;font-size:clamp(.9rem,1.6vw,1.05rem);color:#e6eaea;line-height:1.55}
+.sp-chips{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.sp-chips li{padding:5px 12px;border:1px solid var(--cyan);font-family:var(--font-display);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--cyan)}
+.sp-enter{margin-top:6px}
+@media (max-height:620px){.sp-logo{max-height:28vh}.sp-olimp{width:84px}.sp-stage{gap:8px;padding-top:50px}}
+@media (prefers-reduced-motion:reduce){#splash,.sp-stage.on,.sp-block,.sp-chips{transition:none;animation:none}}

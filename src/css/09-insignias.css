@@ -1,0 +1,31 @@
+/* ======================================================================
+   Insignias
+   Escudos al estilo de los exploradores. El color sale de dos variables (--c1 borde y símbolo, --c2 fondo),
+   que cada metal define. Tamaños: mini (cabecera de nivel), normal (escalera) y grande (ventana y ranking).
+   ====================================================================== */
+.ins{display:inline-block;flex:none;line-height:0;--c1:#9B9F9F;--c2:#1c2223}
+.ins svg{display:block;width:100%;height:100%;overflow:visible}
+.ins-mini{width:28px;height:28px}
+.ins-normal{width:64px;height:64px}
+.ins-grande{width:112px;height:112px}
+
+.ins-escudo{fill:var(--c2);stroke:var(--c1);stroke-width:3;stroke-linejoin:round}
+.ins-borde{fill:none;stroke:var(--c1);stroke-width:1.2;opacity:.55}
+.ins-simbolo{color:var(--c1);fill:var(--c1)}
+.ins-estrella{fill:var(--c1)}
+
+.ins-gris{--c1:#9B9F9F;--c2:#1c2223}
+.ins-bronce{--c1:#c8a982;--c2:#2d2519}
+.ins-plata{--c1:#d4dcde;--c2:#273033}
+.ins-oro{--c1:#ffd36b;--c2:#35290c}
+.ins-cian{--c1:#99ffff;--c2:#0c3436}
+.ins-leyenda{--c1:#ffd36b;--c2:#0c3436}
+
+/* Brillo suave en las insignias ganadas (no en la mini ni en la gris). */
+.ins:not(.ins-off):not(.ins-gris):not(.ins-mini){filter:drop-shadow(0 0 8px color-mix(in srgb,var(--c1) 45%,transparent))}
+.ins-off{filter:grayscale(1);opacity:.35}
+
+/* Al ganar una insignia nueva, el escudo «aparece» con un pequeño salto. */
+.nueva .ins{animation:insgana .8s cubic-bezier(.2,1.4,.4,1) both}
+@keyframes insgana{from{transform:scale(.3) rotate(-12deg);opacity:0}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.nueva .ins{animation:none}}

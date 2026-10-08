@@ -1,0 +1,56 @@
+/* ======================================================================
+   Zona de juego: Retos
+   Contenedor de la app, indicadores del día y tarjeta de cada nivel (arena, vida del enemigo, lista de hábitos, animación de combate).
+   ====================================================================== */
+/* ---------- App ---------- */
+.app{padding-block:clamp(24px,4vw,48px) clamp(40px,6vw,80px)}
+.view-head{display:grid;gap:8px;margin-bottom:clamp(20px,3.5vw,36px)}
+.view-head h1{font-size:clamp(1.5rem,4vw,2.4rem)}
+
+.today{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr));gap:12px;margin-bottom:clamp(20px,3vw,32px)}
+.kpi{border:1px solid var(--line);background:var(--panel-2);padding:14px 16px;display:grid;gap:4px}
+.kpi b{font-family:var(--font-display);font-weight:900;font-size:1.7rem;color:var(--cyan);line-height:1.1}
+.kpi span{font-family:var(--font-display);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--slate)}
+
+.zones{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,520px),1fr));gap:20px}
+.zone{border:1px solid var(--line);background:var(--panel-2);display:grid;align-content:start}
+.zone .arena{padding-bottom:0;position:relative}
+.hp{display:flex;gap:4px;padding:0 18px}
+.hp i{flex:1;height:14px;background:var(--foe);box-shadow:0 0 10px rgba(255,138,61,.45);transition:background .25s steps(2),box-shadow .25s}
+.hp i.off{background:transparent;box-shadow:none;border:1px solid rgba(255,138,61,.35)}
+.hp-row{display:flex;justify-content:space-between;gap:10px;padding:12px 18px 8px;font-family:var(--font-display);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase}
+.hp-row span:first-child{color:var(--foe)}
+.zone.out .fighter.foe .pic{filter:grayscale(1) brightness(.55);opacity:.6}
+.zone .msg{margin:14px 18px 0;border-left:4px solid var(--cyan);padding:4px 0 4px 14px;font-size:.9rem;color:#e6eaea;min-height:3.2em}
+.zone .msg small{display:block;font-family:var(--font-display);font-size:.56rem;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan);margin-bottom:2px}
+.retos{list-style:none;margin:0;padding:14px 18px 18px;display:grid;gap:8px}
+.reto input{position:absolute;opacity:0;pointer-events:none}
+.reto label{display:grid;grid-template-columns:36px 1fr 26px;gap:12px;align-items:center;min-height:56px;padding:8px 12px;border:1px solid var(--line);background:var(--panel);cursor:pointer;transition:border-color .2s,background .2s}
+.reto label:hover{border-color:var(--cyan)}
+.reto input:focus-visible + label{outline:2px solid var(--cyan);outline-offset:3px}
+.reto img{width:32px;height:32px;object-fit:contain;filter:drop-shadow(0 0 5px rgba(153,255,255,.5))}
+.reto .t{font-size:.9rem;color:#e6eaea;line-height:1.4}
+.reto .xp{display:block;font-family:var(--font-display);font-size:.54rem;letter-spacing:.18em;color:var(--slate);text-transform:uppercase}
+.chk{width:26px;height:26px;border:2px solid var(--line-strong);display:grid;place-items:center}
+.reto input:checked + label{background:var(--cyan-soft);border-color:var(--cyan)}
+.reto input:checked + label .chk{background:var(--cyan);border-color:var(--cyan)}
+.reto input:checked + label .chk::after{content:"";width:12px;height:12px;background:var(--void)}
+
+/* Subtítulos de grupo en la lista (nivel Fuego) y medidor «¿Estás listo?» */
+.retos .rg{list-style:none;font-family:var(--font-display);font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan);padding:14px 2px 4px;border-bottom:1px solid var(--line)}
+.ready{display:grid;grid-template-columns:1fr auto;gap:6px 14px;align-items:center;margin:12px 0;padding:12px 14px;border:1px solid var(--line-strong);background:var(--panel-2)}
+.ready b{font-family:var(--font-display);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase}
+.ready p{grid-column:1/-1;margin:0;font-size:.85rem;color:#d3d8d8}
+.ready .pips{display:flex;gap:6px}
+.ready .pips i{width:22px;height:10px;border:1px solid var(--line-strong)}
+.ready .pips i.on{background:var(--cyan);box-shadow:var(--glow)}
+
+/* Rótulos de la tarjeta: nivel y tu insignia */
+.zone .lvl{margin:0;padding:10px 18px;font-family:var(--font-display);font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--cyan);border-bottom:1px solid var(--line)}
+.lvl-ins{margin:0;padding:8px 18px;display:flex;align-items:center;gap:10px;font-size:.8rem;color:var(--slate);border-bottom:1px solid var(--line);background:var(--panel-2)}
+
+/* Animación de combate: capa de partículas y parpadeo de la barra de vida */
+.fxl{position:absolute;inset:0;pointer-events:none;z-index:5;overflow:visible}
+.fxp{position:absolute;left:0;top:0;display:block;will-change:transform,opacity;pointer-events:none}
+.hp i.hit{animation:hpHit .5s steps(4)}
+@keyframes hpHit{0%{background:#fff;box-shadow:0 0 14px #fff}50%{background:var(--foe)}100%{background:transparent}}
