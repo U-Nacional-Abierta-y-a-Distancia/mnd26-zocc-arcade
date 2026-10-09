@@ -1,5 +1,5 @@
 /**
- * Punto de entrada de «¿Y si pasa hoy?».
+ * Punto de entrada de «NIDO».
  *
  * Arquitectura en capas (cada capa solo conoce a las de abajo):
  *
@@ -16,6 +16,8 @@
  */
 import { cargar, consumirAnimo } from './estado/almacen.js';
 import { avisar } from './ui/avisos.js';
+import { iniciarCaso } from './ui/caso.js';
+import { iniciarSonido } from './ui/sonido.js';
 import { iniciarChat } from './ui/chat/panel.js';
 import { iniciarInstalacion, registrarServiceWorker } from './ui/instalacion.js';
 import { iniciarMochila } from './ui/mochila.js';
@@ -26,10 +28,13 @@ import { renderTodo } from './ui/render.js';
 import { iniciarRetos } from './ui/retos.js';
 import { montarTarjetas } from './ui/tarjetas.js';
 
+window.__ysph = true;    // avisa a la red de seguridad de index.html de que el juego arrancó
 cargar();                 // 1. leer el progreso guardado
 montarTarjetas();         // 2. tarjetas de personajes (portada y Agentes)
 iniciarRetos();           // 3. tarjetas de los cinco niveles
 iniciarMochila();
+iniciarSonido();          // botón de sonido y efectos
+iniciarCaso();            // narrativa «¿Tu familia está lista?» (botones con data-caso)
 iniciarReinicio();
 iniciarChat();            // 4. EL JEFE (personaje flotante y chat)
 iniciarInstalacion();     // 5. fila de instalación / APK

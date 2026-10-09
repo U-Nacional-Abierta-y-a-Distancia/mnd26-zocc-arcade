@@ -1,40 +1,45 @@
 /**
- * Ventana emergente «¡Jugada completada!»: se abre al cumplir los 6 hábitos de un nivel y muestra la insignia
- * que tienes (con confeti si es una nueva), cuánto falta para la siguiente y los 6 hábitos que llegan.
+ * Ventanas emergentes de la jugada, que se abren cuando termina la animación de combate:
+ *  - VICTORIA («¡Jugada N completada!»): el enemigo cayó. Muestra la insignia que tienes (con confeti si es nueva),
+ *    cuánto falta para la siguiente y los hábitos de la jugada que empieza.
+ *  - DERROTA («Tu salvador cayó»): los descuidos ganaron. Explica cómo corregir cada uno y deja repetir la jugada.
  *
  * La regla del juego (`registrarMarca`) entrega los datos; `programar` los guarda y `mostrarPendiente` abre la
- * ventana cuando termina la animación de combate.
+ * ventana que corresponda.
  *
  * Solo puede haber una ventana a la vez. Es accesible: `role="dialog"`, el foco queda atrapado dentro, Esc la
  * cierra y el foco vuelve al elemento que la abrió.
  *
  * @module ui/ventanas
  */
-import { HABITOS_POR_JUGADA, XP_POR_HABITO } from '../config.js';
+import { BUENOS_POR_JUGADA, MALOS_POR_JUGADA, XP_POR_HABITO } from '../config.js';
 import { INSIGNIAS } from '../datos/insignias.js';
+import { ENEMIGOS } from '../datos/agentes.js';
 import { NIVELES } from '../datos/niveles.js';
 import { xpDe } from '../dominio/progreso.js';
 import { S } from '../estado/almacen.js';
 import { $, $$, el } from '../util/dom.js';
 import { confeti } from './avisos.js';
+import { sonar } from './sonido.js';
 import { crearInsignia } from './insignias.js';
 import { ir, vistaActual } from './navegacion.js';
 
-/** @typedef {import('../dominio/progreso.js').JugadaCompleta} JugadaCompleta */
+/** @typedef {import('../dominio/progreso.js').Victoria & {tipo: 'victoria'}} VictoriaPendiente */
+/** @typedef {import('../dominio/progreso.js').Derrota & {tipo: 'derrota'}} DerrotaPendiente */
 
 /** Ventana abierta (o null). @type {HTMLElement | null} */
 let ventana = null;
 /** Elemento que tenía el foco antes de abrir la ventana. @type {Element | null} */
 let focoPrevio = null;
-/** Jugada completada que aún no se muestra. @type {JugadaCompleta | null} */
+/** Victoria o derrota que aún no se muestra. @type {VictoriaPendiente | DerrotaPendiente | null} */
 let pendiente = null;
 
 /** ¿Hay una ventana abierta? @returns {boolean} */
 export const hayVentana = () => ventana !== null;
 
-/** Guarda la jugada completada para mostrarla enseguida con `mostrarPendiente`. @param {JugadaCompleta} jugada */
-export function programar(jugada) {
-  pendiente = jugada;
+/** Guarda el resultado de la jugada para mostrarlo enseguida con `mostrarPendiente`. @param {VictoriaPendiente | DerrotaPendiente} resultado */
+export function programar(resultado) {
+  pendiente = resultado;
 }
 
 /** Descarta lo pendiente (al cambiar de jugador: era del anterior). */
@@ -48,19 +53,26 @@ export function cerrarVentana() {
   ventana.remove();
   ventana = null;
   document.body.classList.remove('modal-open');
+  document.dispatchEvent(new Event('ysph:ventana-cerrada')); // p. ej. el narrador deja de hablar
   if (focoPrevio instanceof HTMLElement) focoPrevio.focus();
 }
 
-/** Abre la ventana de la jugada pendiente (si hay y no hay otra ventana abierta). */
+/** Abre la ventana del resultado pendiente (si hay y no hay otra ventana abierta). */
 export function mostrarPendiente() {
   if (!pendiente || ventana) return;
-  const jugada = pendiente;
+  const resultado = pendiente;
   pendiente = null;
-  abrirVentanaDeJugada(jugada);
+  if (resultado.tipo === 'victoria') abrirVentanaDeVictoria(resultado);
+  else abrirVentanaDeDerrota(resultado);
 }
 
-/** Crea el marco (fondo, accesibilidad, teclado) y lo muestra con la tarjeta dada. @param {HTMLElement} tarjeta */
-function abrirMarco(tarjeta) {
+/**
+ * Crea el marco (fondo, accesibilidad, teclado) y lo muestra con la tarjeta dada. Lo usan las ventanas de resultado
+ * y la narrativa de EL JEFE (`ui/caso.js`).
+ * @param {HTMLElement} tarjeta
+ * @returns {HTMLElement} El marco (por si hace falta escuchar más teclas).
+ */
+export function abrirVentana(tarjeta) {
   focoPrevio = document.activeElement;
   const marco = el('div', 'modal');
   marco.setAttribute('role', 'dialog');
@@ -81,6 +93,7 @@ function abrirMarco(tarjeta) {
   document.body.appendChild(marco);
   document.body.classList.add('modal-open');
   ventana = marco;
+  return marco;
 }
 
 /** Botón de ventana. @param {string} clase @param {string} texto @param {() => void} alClic @returns {HTMLButtonElement} */
@@ -91,7 +104,7 @@ function botonDeVentana(clase, texto, alClic) {
   return b;
 }
 
-/** Lo que dice la ventana sobre la insignia: la ganada, o cuánto falta para la siguiente. @param {JugadaCompleta} jugada */
+/** Lo que dice la ventana sobre la insignia: la ganada, o cuánto falta para la siguiente. @param {VictoriaPendiente} jugada */
 function textoDeInsignia(jugada) {
   const actual = INSIGNIAS[jugada.insignia];
   const siguiente = INSIGNIAS[jugada.insignia + 1];
@@ -105,8 +118,8 @@ function textoDeInsignia(jugada) {
   };
 }
 
-/** Construye y abre la ventana «¡Jugada N completada!». @param {JugadaCompleta} jugada */
-function abrirVentanaDeJugada(jugada) {
+/** Construye y abre la ventana «¡Jugada N completada!». @param {VictoriaPendiente} jugada */
+function abrirVentanaDeVictoria(jugada) {
   const nivel = NIVELES[jugada.nivel];
   const tarjeta = el('div', 'modal-card');
   const cuerpo = el('div', 'cbody round-body');
@@ -119,10 +132,15 @@ function abrirVentanaDeJugada(jugada) {
   const { titulo, detalle } = textoDeInsignia(jugada);
   $('.ins-texto b', cuerpo).textContent = titulo;
   $('.ins-texto span', cuerpo).textContent = detalle;
-  $('.rnext', cuerpo).textContent = `Llegan ${HABITOS_POR_JUGADA} hábitos nuevos para la jugada ${jugada.hecha + 1}:`;
-  jugada.siguientes.forEach((habito) => {
+  $('.rnext', cuerpo).textContent = `Llegan ${BUENOS_POR_JUGADA} hábitos buenos y ${MALOS_POR_JUGADA} descuidos nuevos para la jugada ${jugada.hecha + 1}:`;
+  jugada.siguientes.buenos.forEach((habito) => {
     const fila = el('li');
     fila.textContent = habito.texto;
+    $('.rlist', cuerpo).appendChild(fila);
+  });
+  jugada.siguientes.malos.forEach((habito) => {
+    const fila = el('li', 'malo');
+    fila.textContent = `Descuido: ${habito.texto}`;
     $('.rlist', cuerpo).appendChild(fila);
   });
   cuerpo.classList.toggle('nueva', jugada.nueva);
@@ -140,7 +158,43 @@ function abrirVentanaDeJugada(jugada) {
   barra.appendChild(fila);
   tarjeta.appendChild(barra);
 
-  abrirMarco(tarjeta);
+  abrirVentana(tarjeta);
+  sonar(jugada.nueva ? 'insignia' : 'victoria');
   if (jugada.nueva) confeti(innerWidth / 2, innerHeight * 0.3);
   empezar.focus();
+}
+
+/** Construye y abre la ventana «Tu salvador cayó». @param {DerrotaPendiente} derrota */
+function abrirVentanaDeDerrota(derrota) {
+  const nivel = NIVELES[derrota.nivel];
+  const tarjeta = el('div', 'modal-card derrota');
+  const cuerpo = el('div', 'cbody round-body');
+  cuerpo.innerHTML = '<span class="ctag"></span><h2 id="popT"></h2><p class="rwin"></p><p class="rnext"></p><ul class="rlist corregir"></ul>';
+  $('.ctag', cuerpo).textContent = `Nivel ${derrota.nivel + 1} de ${NIVELES.length} · ${nivel.nombre}`;
+  $('h2', cuerpo).textContent = '¡Tu salvador cayó!';
+  $('.rwin', cuerpo).textContent = `Reconociste ${MALOS_POR_JUGADA} descuidos antes de lograr tus ${BUENOS_POR_JUGADA} hábitos buenos y ${ENEMIGOS[nivel.enemigo].nombre} se hizo más fuerte. No pierdes XP: reconocerlo ya fue valiente (y suma). Repite la jugada.`;
+  $('.rnext', cuerpo).textContent = 'Cómo corregir cada descuido:';
+  derrota.correcciones.forEach(({ malo, bueno }) => {
+    const fila = el('li');
+    fila.innerHTML = '<s></s><b></b>';
+    $('s', fila).textContent = malo.texto;
+    $('b', fila).textContent = `En su lugar: ${bueno.texto}`;
+    $('.rlist', cuerpo).appendChild(fila);
+  });
+  tarjeta.appendChild(cuerpo);
+
+  const barra = el('div', 'modal-bar');
+  const fila = el('div', 'cgo');
+  const reintentar = botonDeVentana('btn sm', 'Intentarlo de nuevo', () => {
+    cerrarVentana();
+    const zona = document.getElementById(`z-${nivel.id}`);
+    if (zona && vistaActual() === 'retos') zona.scrollIntoView({ block: 'start' });
+  });
+  fila.appendChild(reintentar);
+  barra.appendChild(fila);
+  tarjeta.appendChild(barra);
+
+  abrirVentana(tarjeta);
+  sonar('derrota');
+  reintentar.focus();
 }

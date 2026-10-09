@@ -1,0 +1,154 @@
+/* ======================================================================
+   Narrativa «¿Tu familia está lista?»
+   Panel traslúcido de aspecto «tecnológico» (visor HUD) narrado por EL JEFE: cristal desenfocado sobre el juego,
+   borde y esquinas cian con brillo, líneas de escaneo y una barra de luz que recorre el panel.
+   El naranja (--foe) se usa solo para lo que sale mal.
+   ====================================================================== */
+.hero-caso{grid-column:1/-1;margin:14px 0 0}
+
+/* ---------- Fondo: el juego se ve detrás, desenfocado ---------- */
+.modal.modal-caso{
+  background:radial-gradient(ellipse at 50% 20%,rgba(153,255,255,.14),transparent 62%),rgba(2,9,11,.46);
+  -webkit-backdrop-filter:blur(9px) saturate(1.25);backdrop-filter:blur(9px) saturate(1.25);
+}
+
+/* ---------- Panel de cristal ---------- */
+.modal-card.caso{
+  position:relative;display:flex;flex-direction:column;width:min(780px,100%);max-height:calc(100dvh - 24px);overflow:hidden;
+  background:linear-gradient(155deg,rgba(14,34,37,.74),rgba(5,14,17,.62) 60%,rgba(8,22,26,.72));
+  -webkit-backdrop-filter:blur(16px) saturate(1.2);backdrop-filter:blur(16px) saturate(1.2);
+  border:1px solid rgba(153,255,255,.5);
+  box-shadow:0 0 0 1px rgba(153,255,255,.07) inset,0 0 42px rgba(153,255,255,.2),0 26px 70px rgba(0,0,0,.55);
+}
+/* Rejilla fina y líneas de escaneo */
+.modal-card.caso::before{
+  content:"";position:absolute;inset:0;pointer-events:none;z-index:0;
+  background:
+    linear-gradient(rgba(153,255,255,.045) 1px,transparent 1px) 0 0/100% 34px,
+    linear-gradient(90deg,rgba(153,255,255,.035) 1px,transparent 1px) 0 0/34px 100%,
+    repeating-linear-gradient(0deg,rgba(153,255,255,.03) 0 1px,transparent 1px 3px);
+}
+/* Barra de luz que recorre el panel */
+.modal-card.caso::after{
+  content:"";position:absolute;left:0;right:0;top:-90px;height:90px;pointer-events:none;z-index:0;
+  background:linear-gradient(180deg,transparent,rgba(153,255,255,.11),transparent);
+}
+@media (prefers-reduced-motion:no-preference){
+  .modal-card.caso::after{animation:casoBarrido 7s linear infinite}
+  .caso-cuerpo>*{animation:casoEntra .38s ease both}
+  .caso-hud i{animation:casoLatido 1.6s ease-in-out infinite}
+  .caso-av::before{animation:casoGiro 7s linear infinite}
+}
+@keyframes casoBarrido{from{transform:translateY(0)}to{transform:translateY(calc(100dvh + 120px))}}
+@keyframes casoEntra{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes casoLatido{0%,100%{opacity:1}50%{opacity:.25}}
+@keyframes casoGiro{to{transform:rotate(360deg)}}
+.modal-card.caso>*{position:relative;z-index:1}
+
+/* Esquinas del visor */
+.caso .esq{position:absolute;width:18px;height:18px;border:2px solid var(--cyan);pointer-events:none;z-index:3;filter:drop-shadow(0 0 5px rgba(153,255,255,.8))}
+.caso .esq.a{top:6px;left:6px;border-right:0;border-bottom:0}
+.caso .esq.b{top:6px;right:6px;border-left:0;border-bottom:0}
+.caso .esq.c{bottom:6px;left:6px;border-right:0;border-top:0}
+.caso .esq.d{bottom:6px;right:6px;border-left:0;border-top:0}
+
+/* ---------- Cabecera: avatar holográfico y título ---------- */
+.caso-head{display:grid;grid-template-columns:auto 1fr;gap:clamp(12px,3vw,20px);align-items:center;padding:20px 24px 12px;border-bottom:1px solid rgba(153,255,255,.22)}
+.caso-av{position:relative;display:grid;place-items:center;width:clamp(64px,13vw,88px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(153,255,255,.18),transparent 70%)}
+.caso-av::before{
+  content:"";position:absolute;inset:0;border-radius:50%;
+  background:conic-gradient(var(--cyan),transparent 35%,var(--cyan) 62%,transparent 85%);
+  -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 2px),#000 calc(100% - 2px));mask:radial-gradient(farthest-side,transparent calc(100% - 2px),#000 calc(100% - 2px));
+}
+.caso-av img{display:block;width:84%;height:auto;max-height:94%;object-fit:contain;filter:drop-shadow(0 0 12px rgba(153,255,255,.55))}
+.caso-burbuja{display:grid;gap:4px;min-width:0}
+.caso-hud{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-display);font-size:.54rem;letter-spacing:.24em;text-transform:uppercase;color:rgba(153,255,255,.75)}
+.caso-hud i{width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 10px var(--cyan)}
+.caso-burbuja .ctag{font-size:.62rem;letter-spacing:.2em}
+.caso-burbuja h2{margin:0;font-family:var(--font-display);font-size:clamp(1.05rem,3vw,1.55rem);text-wrap:balance;text-shadow:0 0 18px rgba(153,255,255,.28)}
+
+/* ---------- Cuerpo ---------- */
+.caso-cuerpo{flex:1;min-height:0;overflow-y:auto;padding:16px 24px;display:grid;gap:14px;align-content:start}
+.caso-jefe{margin:0;padding:11px 14px;border:1px solid rgba(153,255,255,.28);border-left:4px solid var(--cyan);background:rgba(4,14,17,.55);font-size:.93rem;line-height:1.6;color:#eaf4f4;max-width:66ch}
+.caso-jefe b{font-family:var(--font-display);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--cyan)}
+.caso-aviso{margin:0 0 12px;font-size:.8rem;color:#a9bcbc}
+.caso-nota{margin:12px 0 0;font-size:.78rem;color:#a9bcbc}
+
+/* Escena 1 */
+.caso-dos{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.caso-col{border:1px solid rgba(153,255,255,.2);padding:12px 14px;background:rgba(6,18,21,.5)}
+.caso-col h3{margin:0 0 8px;font-family:var(--font-display);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase}
+.caso-col.no{border-color:rgba(255,138,61,.4)}
+.caso-col.no h3{color:var(--foe)}
+.caso-col.si{border-color:var(--cyan);background:rgba(153,255,255,.09);box-shadow:0 0 22px rgba(153,255,255,.12) inset}
+.caso-col.si h3{color:var(--cyan)}
+.caso-lista{margin:0;padding:0;list-style:none;display:grid;gap:6px;font-size:.88rem;color:#e9eeee}
+.caso-lista li::before{content:"";display:inline-block;width:6px;height:6px;margin-right:8px;background:currentColor;opacity:.7}
+
+/* Escenas 2 a 5 */
+.caso-frentes,.caso-momentos,.caso-habitos,.caso-estado{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.caso-frentes li,.caso-habitos li{display:grid;gap:2px;padding:10px 14px;border:1px solid rgba(153,255,255,.2);background:rgba(6,18,21,.5)}
+.caso-frentes b,.caso-habitos b{font-family:var(--font-display);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan)}
+.caso-frentes span,.caso-habitos span{font-size:.9rem;color:#e9eeee}
+.caso-frentes small{font-size:.74rem;color:var(--foe)}
+
+.caso-momentos li{display:grid;grid-template-columns:auto 1fr;gap:2px 14px;padding:10px 14px;border:1px solid rgba(153,255,255,.2);background:rgba(6,18,21,.5)}
+.caso-momentos time{grid-row:span 3;align-self:start;font-family:var(--font-display);font-size:.68rem;letter-spacing:.08em;color:var(--cyan);white-space:nowrap;padding-top:2px;text-shadow:0 0 10px rgba(153,255,255,.5)}
+.caso-momentos b{font-family:var(--font-display);font-size:.82rem;color:var(--white)}
+.caso-momentos span{font-size:.88rem;color:#e9eeee;line-height:1.5}
+.caso-momentos small{font-size:.72rem;color:#a9bcbc}
+.caso-momentos li.sin{border-color:rgba(255,138,61,.5);background:rgba(40,16,6,.38)}
+.caso-momentos li.sin time{color:var(--foe);text-shadow:0 0 10px rgba(255,138,61,.5)}
+.caso-momentos li.con{border-color:var(--cyan);background:rgba(153,255,255,.08)}
+
+/* Interruptor de los dos finales */
+.caso-switch{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.caso-sw{min-height:44px;padding:0 16px;background:rgba(6,18,21,.5);border:1px solid rgba(153,255,255,.3);font-family:var(--font-display);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:#a9bcbc;cursor:pointer;transition:background .2s,color .2s,box-shadow .2s}
+.caso-sw:hover{border-color:var(--cyan);color:var(--white)}
+.caso-sw[aria-pressed="true"].sin{background:var(--foe);border-color:var(--foe);color:var(--void);box-shadow:0 0 18px rgba(255,138,61,.45)}
+.caso-sw[aria-pressed="true"].con{background:var(--cyan);border-color:var(--cyan);color:var(--void);box-shadow:0 0 18px rgba(153,255,255,.45)}
+.caso-sw:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+
+/* Escena 6 */
+.caso-cuenta{margin:0 0 12px;font-family:var(--font-display);font-weight:900;font-size:clamp(1.2rem,4vw,1.8rem);color:var(--cyan);text-shadow:0 0 22px rgba(153,255,255,.4)}
+.caso-estado li{display:grid;gap:2px;padding:10px 14px;border:1px solid rgba(153,255,255,.2);background:rgba(6,18,21,.5)}
+.caso-estado b{font-family:var(--font-display);font-size:.78rem;letter-spacing:.12em;text-transform:uppercase}
+.caso-estado span{font-size:.84rem;color:#a9bcbc}
+.caso-estado li.ok{border-color:var(--cyan);background:rgba(153,255,255,.1)}
+.caso-estado li.ok b{color:var(--cyan)}
+.caso-estado li.ok span{color:#d8f4f4}
+.caso-estado li.falta{border-color:rgba(255,138,61,.45)}
+.caso-estado li.falta b{color:var(--foe)}
+
+/* ---------- Navegación ---------- */
+.modal-bar.caso-nav{position:static;display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px 16px;padding:12px 24px 16px;border-top:1px solid rgba(153,255,255,.22);background:rgba(3,10,12,.5)}
+.caso-izq{display:grid;gap:8px}
+.caso-puntos{display:flex;gap:5px}
+.caso-puntos i{width:26px;height:5px;background:rgba(153,255,255,.2);transition:background .25s,box-shadow .25s}
+.caso-puntos i.on{background:var(--cyan);box-shadow:0 0 10px var(--cyan)}
+.caso-omitir{display:inline-flex;align-items:center;gap:8px;font-size:.74rem;color:#a9bcbc;cursor:pointer}
+.caso-omitir input{width:16px;height:16px;accent-color:var(--cyan)}
+.caso-nav .cgo{justify-content:flex-end}
+
+@media (max-width:620px){
+  .caso-dos{grid-template-columns:1fr}
+  .caso-head{padding:16px 16px 10px;gap:12px}
+  .caso-cuerpo{padding:12px 16px}
+  .modal-bar.caso-nav{grid-template-columns:1fr;padding:10px 16px 14px}
+  .caso-nav .cgo{justify-content:stretch}
+  .caso-nav .cgo .btn{flex:1}
+  .caso-momentos li{grid-template-columns:1fr}
+  .caso-momentos time{grid-row:auto}
+}
+@media (prefers-reduced-transparency:reduce){
+  .modal.modal-caso{background:rgba(2,9,11,.92);-webkit-backdrop-filter:none;backdrop-filter:none}
+  .modal-card.caso{background:#0a1719;-webkit-backdrop-filter:none;backdrop-filter:none}
+}
+
+/* ---------- Narrador (voz) ---------- */
+.caso-voz{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px}
+.caso-escuchar{min-height:36px;padding:0 14px}
+.caso-escuchar[aria-pressed="true"]{border-color:var(--cyan);box-shadow:0 0 14px rgba(153,255,255,.5);color:var(--white)}
+.caso-escuchar:disabled{opacity:.45;cursor:not-allowed}
+.caso-vel select{min-height:32px;padding:0 8px;background:rgba(6,18,21,.7);border:1px solid rgba(153,255,255,.35);color:var(--white);font:inherit;font-size:.78rem}
+.caso-vel select:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}

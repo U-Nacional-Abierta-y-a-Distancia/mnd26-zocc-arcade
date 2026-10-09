@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>¿Y si pasa hoy? · un juego serio de ARCADE</title>
-<meta name="description" content="¿Y si pasa hoy? es un juego serio de ARCADE: hábitos diarios para enfrentar El Niño y otros desastres en la Zona Occidente y Dosquebradas.">
+<title>NIDO · ¿Y si pasa hoy? — un juego serio de ARCADE</title>
+<meta name="description" content="NIDO (¿Y si pasa hoy?) es un juego serio de ARCADE: nos informamos, decidimos y organizamos en familia; hábitos diarios para enfrentar El Niño y otros desastres en la Zona Occidente y Dosquebradas.">
 <meta name="theme-color" content="#050505">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="jefe-api" content="/api/jefe">
@@ -25,6 +25,7 @@
 <link rel="stylesheet" href="css/12-chat.css">
 <link rel="stylesheet" href="css/13-presentacion.css">
 <link rel="stylesheet" href="css/14-pie-y-avisos.css">
+<link rel="stylesheet" href="css/15-caso.css">
 </head>
 <body>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -45,7 +46,9 @@
   <section class="sp-stage" id="sp2">
     <p class="sp-load" aria-live="polite">Cargando el juego…</p>
     <div class="sp-bar slim" aria-hidden="true"><i></i></div>
-    <p class="display sp-title">¿Y si pasa hoy?</p>
+    <p class="display sp-title">NIDO</p>
+    <p class="slogan sp-slogan">¿Y si pasa hoy?</p>
+    <p class="lema" aria-label="Nos informamos, decidimos y organizamos en familia"><b>N</b>os <b>I</b>nformamos, <b>D</b>ecidimos y <b>O</b>rganizamos en familia</p>
     <div class="sp-block" data-i="0">
       <h2>¿Para quién es?</h2>
       <p>Para las familias de la Zona Occidente y Dosquebradas: hogares que quieren prepararse juntos, desde casa, para El Niño y otros desastres.</p>
@@ -65,7 +68,7 @@
 
 <header class="nav">
   <div class="wrap">
-    <button class="brand" data-go="home" aria-label="¿Y si pasa hoy?, un juego de ARCADE. Ir a la portada"><img src="assets/icon-game.webp" alt="" width="36" height="30"><b>¿Y si pasa hoy?</b><small>por ARCADE</small></button>
+    <button class="brand" data-go="home" aria-label="NIDO, ¿Y si pasa hoy?, un juego de ARCADE. Ir a la portada"><img src="assets/icon-game.webp" alt="" width="36" height="30"><b>NIDO</b><small>por ARCADE</small></button>
     <nav aria-label="Portada" id="landNav" style="display:contents">
       <ul class="links" id="landLinks">
         <li><button class="lk" data-scroll="como">Cómo se juega</button></li>
@@ -84,6 +87,7 @@
       </div>
       <div class="app-right">
         <div class="xp-chip" aria-label="Tu progreso"><span class="t" id="chipRank">Aspirante</span><i id="chipBar"></i><b id="chipXp">0 XP</b></div>
+        <button class="snd-btn" type="button" data-sonido aria-pressed="true" aria-label="Sonido activado. Tocar para silenciar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 4V5L7 9H3z"/><path class="ondas" d="M15.5 9a4 4 0 010 6M18 6.5a8 8 0 010 11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path class="equis" d="M16 9.5l5 5M21 9.5l-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
         <button class="menu-btn app-menu-btn" id="appMenuBtn" type="button" aria-expanded="false" aria-controls="tabs" aria-label="Abrir el menú del juego"><span></span></button>
       </div>
     </nav>
@@ -101,13 +105,16 @@
     <div>
       <p class="label">Un juego serio de ARCADE · Zona Occidente y Dosquebradas</p>
       <div class="bar"></div>
-      <h1 class="display" id="h-hero">¿Y si pasa hoy?</h1>
+      <h1 class="display" id="h-hero">NIDO</h1>
+      <p class="slogan">¿Y si pasa hoy?</p>
+      <p class="lema" aria-label="Nos informamos, decidimos y organizamos en familia"><b>N</b>os <b>I</b>nformamos, <b>D</b>ecidimos y <b>O</b>rganizamos en familia</p>
     </div>
     <div class="hero-art">
       <canvas id="particles" aria-hidden="true"></canvas>
       <img src="assets/icon-game.webp" alt="Ícono del juego: un cubo sobre una base" width="524" height="440">
     </div>
-    <ul class="hero-line" aria-label="Lo esencial del juego"><li><button type="button" data-scroll="como">Cómo se juega</button></li><li>5 niveles</li><li>6 hábitos por nivel<span class="opt"> para cada jugador</span></li><li>Ranking familiar</li></ul>
+    <ul class="hero-line" aria-label="Lo esencial del juego"><li><button type="button" data-scroll="como">Cómo se juega</button></li><li>5 niveles</li><li>3 buenos y 3 descuidos por jugada<span class="opt"> para cada jugador</span></li><li>Ranking familiar</li></ul>
+    <p class="hero-caso"><button type="button" class="btn ghost sm" data-caso>¿Está lista tu familia? · Escucha a EL JEFE</button></p>
   </div>
 </section>
 
@@ -121,7 +128,7 @@
 <section class="alt como-mini" id="como" aria-label="Cómo se juega">
   <div class="wrap">
     <ol class="steps-mini">
-      <li><b>1 · Marca tus hábitos</b><span>Cada uno le quita vida al enemigo.</span></li>
+      <li><b>1 · Cuida tus hábitos</b><span>Los buenos hieren al enemigo; los descuidos lo fortalecen.</span></li>
       <li><b>2 · Gana insignias</b><span>Cada nivel completo te acerca a la siguiente.</span></li>
       <li><b>3 · Juega en familia</b><span>Mira quién va mejor y quién necesita ayuda.</span></li>
     </ol>
@@ -237,8 +244,8 @@
       <div class="view-head">
         <p class="label" id="dateLabel"></p>
         <h1 class="display" id="t-retos">Retos de hoy</h1>
-        <p class="lede">Marca los hábitos que cumples. Cada uno le quita vida al enemigo; al completar los 6 de un nivel llegan 6 nuevos.</p>
-        <p class="note" style="margin-top:8px">Cada nivel que completas te da XP y te acerca a la siguiente <button type="button" class="chip" data-go="ranking" style="min-height:36px;padding:4px 12px">insignia</button></p>
+        <p class="lede">En cada nivel hay 3 hábitos buenos y 3 descuidos. Cada hábito bueno que cumples hiere al enemigo; cada descuido que reconoces lo fortalece y hiere a tu salvador. Gana quien llegue primero a 3.</p>
+        <p class="note" style="margin-top:8px">Cada jugada que ganas te da XP y te acerca a la siguiente <button type="button" class="chip" data-go="ranking" style="min-height:36px;padding:4px 12px">insignia</button> · <button type="button" class="chip" data-caso style="min-height:36px;padding:4px 12px">¿Está lista tu familia?</button></p>
       </div>
       <div class="today" id="today"></div>
       <div class="zones" id="zones"></div>
@@ -328,12 +335,28 @@
 <footer>
   <div class="wrap grid">
     <img src="assets/img3.webp" alt="" width="84" height="73">
-    <p>¿Y si pasa hoy? es un juego serio diseñado por ARCADE. Prototipo de app-juego de hábitos frente a El Niño en la Zona Occidente y Dosquebradas. EL JEFE, los salvadores y los enemigos son conceptos en desarrollo; los consejos de seguridad son generales y no reemplazan las indicaciones de la gestión del riesgo municipal.</p>
+    <p>NIDO (¿Y si pasa hoy?) es un juego serio diseñado por ARCADE. Prototipo de app-juego de hábitos frente a El Niño en la Zona Occidente y Dosquebradas. EL JEFE, los salvadores y los enemigos son conceptos en desarrollo; los consejos de seguridad son generales y no reemplazan las indicaciones de la gestión del riesgo municipal.</p>
   </div>
 </footer>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <canvas class="burst" id="burst" aria-hidden="true"></canvas>
+<script>
+/* Red de seguridad: si el JavaScript del juego no arranca (típico al abrir index.html con doble clic, porque el
+   navegador bloquea los módulos), se quita la presentación y se explica qué hacer, en vez de dejarla pegada. */
+setTimeout(function () {
+  if (window.__ysph) return;
+  var presentacion = document.getElementById('splash');
+  if (presentacion) presentacion.style.display = 'none';
+  document.body.classList.remove('splash-on');
+  document.body.style.overflow = 'auto';
+  var aviso = document.createElement('div');
+  aviso.setAttribute('role', 'alert');
+  aviso.style.cssText = 'position:fixed;left:12px;right:12px;bottom:12px;z-index:999;padding:14px 16px;background:#0a1011;border:1px solid #99ffff;color:#fff;font:14px/1.5 Poppins,Arial,sans-serif';
+  aviso.innerHTML = '<b style="color:#99ffff">El juego no pudo iniciar.</b> Si abriste este archivo con doble clic, usa la versión de un solo archivo (<code>nido.html</code>) o abre el juego con <code>npm start</code> en <code>http://localhost:3000</code>.';
+  document.body.appendChild(aviso);
+}, 2500);
+</script>
 <script type="module" src="js/main.js"></script>
 </body>
 </html>

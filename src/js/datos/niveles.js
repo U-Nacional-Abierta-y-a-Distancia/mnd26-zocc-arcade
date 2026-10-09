@@ -4,6 +4,7 @@
  * @module datos/niveles
  */
 import { HABITOS } from './habitos.js';
+import { HABITOS_MALOS } from './habitos-malos.js';
 
 /**
  * @typedef {Object} Nivel
@@ -13,7 +14,8 @@ import { HABITOS } from './habitos.js';
  * @property {string}   enemigo       Clave de `ENEMIGOS`.
  * @property {string[]} [preparacion] Ids de hábitos que miden «¿estás listo?» (solo Fuego).
  * @property {{enemigo:string, apoyo:string, debilidad:string, porQue:string, inicio:string, medio:string, victoria:string}} textos
- * @property {import('./habitos.js').Habito[]} habitos Banco completo del nivel (18).
+ * @property {import('./habitos.js').Habito[]} habitos Banco de hábitos buenos del nivel (18).
+ * @property {import('./habitos.js').Habito[]} malos    Banco de descuidos del nivel (18): el opuesto de cada hábito bueno.
  */
 
 /** @type {Nivel[]} */
@@ -33,6 +35,7 @@ export const NIVELES = [
       victoria: 'La Voraz Sequía se quedó sin sed. Hoy, el agua ganó.',
     },
     habitos: HABITOS.agua,
+    malos: HABITOS_MALOS.agua,
   },
   {
     id: 'energia',
@@ -49,6 +52,7 @@ export const NIVELES = [
       victoria: 'El Derroche Vampiro se quedó sin batería. Casa eficiente.',
     },
     habitos: HABITOS.energia,
+    malos: HABITOS_MALOS.energia,
   },
   {
     id: 'calor',
@@ -65,6 +69,7 @@ export const NIVELES = [
       victoria: 'El Solazo se quedó sin fuerza. Hoy el calor no te ganó.',
     },
     habitos: HABITOS.calor,
+    malos: HABITOS_MALOS.calor,
   },
   {
     id: 'fuego',
@@ -82,6 +87,7 @@ export const NIVELES = [
       victoria: 'La Chispa se quedó sin llama: prevención y plan listos.',
     },
     habitos: HABITOS.fuego,
+    malos: HABITOS_MALOS.fuego,
   },
   {
     id: 'sismo',
@@ -98,17 +104,24 @@ export const NIVELES = [
       victoria: 'La Réplica no encontró a nadie desprevenido. Plan al día.',
     },
     habitos: HABITOS.sismo,
+    malos: HABITOS_MALOS.sismo,
   },
 ];
 
 /** Número de niveles. */
 export const TOTAL_NIVELES = NIVELES.length;
 
-/** Busca un hábito por su id en todos los niveles. @param {string} id @returns {import('./habitos.js').Habito | undefined} */
+/** Busca un hábito (bueno o descuido) por su id en todos los niveles. @param {string} id @returns {import('./habitos.js').Habito | undefined} */
 export function buscarHabito(id) {
   for (const nivel of NIVELES) {
-    const h = nivel.habitos.find((x) => x.id === id);
+    const h = nivel.habitos.find((x) => x.id === id) || nivel.malos.find((x) => x.id === id);
     if (h) return h;
   }
   return undefined;
 }
+
+/** Ids de todos los descuidos. */
+const IDS_MALOS = new Set(NIVELES.flatMap((nivel) => nivel.malos.map((h) => h.id)));
+
+/** ¿Este id es de un descuido (hábito negativo)? @param {string} id @returns {boolean} */
+export const esHabitoMalo = (id) => IDS_MALOS.has(id);

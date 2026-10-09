@@ -1,11 +1,13 @@
-# Manual de usuario — ¿Y si pasa hoy?
+# Manual de usuario — NIDO · ¿Y si pasa hoy?
 
 **Un juego serio de ARCADE · Olimpiadas Unadistas**
 Versión del prototipo: octubre de 2026
 
 ---
 
-## 1. ¿Qué es ¿Y si pasa hoy??
+## 1. ¿Qué es NIDO?
+
+**NIDO** es un acrónimo: **N**os · **I**nformamos · **D**ecidimos · **O**rganizamos, en familia. Su eslogan es «¿Y si pasa hoy?». Informarse (con fuentes oficiales y EL JEFE), decidir (qué hábito hacer hoy) y organizarse (el ranking y los ánimos de la familia) son los tres pasos del juego.
 
 Es un juego web, interactivo y adaptable a celular, computador y tableta. Sirve para crear **hábitos diarios** que preparan a tu hogar frente a **El Niño** y otros desastres en la **Zona Occidente y Dosquebradas**: ahorrar agua y energía, cuidarse del calor, prevenir el fuego y estar listo ante un sismo.
 
@@ -50,6 +52,27 @@ Si tocas **Ahora no**, vuelves a la portada.
 
 ---
 
+### 2.4 ¿Está lista tu familia? (la narrativa de EL JEFE)
+
+**Al pulsar «Entrar al juego»** en la portada (y después de poner tu nickname) aparece primero un **panel traslúcido de estilo tecnológico**, con el juego desenfocado detrás, que cuenta EL JEFE en **seis escenas**. Si no quieres verlo cada vez, marca **«No mostrar al entrar»** (se recuerda en tu dispositivo). Para verlo cuando quieras, usa el botón **«¿Está lista tu familia? · Escucha a EL JEFE»** de la portada o el chip «¿Está lista tu familia?» en **Retos**. Pasa de una a otra con **Siguiente / Anterior** o con las **flechas del teclado**; **Esc** o **Cerrar** la cierran.
+
+| Escena | Qué cuenta |
+|---|---|
+| 1 · **La pregunta** | Hay cosas que no controlas (cuándo llega un fenómeno, qué tan fuerte es) y otras que sí (agua guardada, ruta de salida, mochila). |
+| 2 · **Los frentes** | Cuando algo así golpea llegan varios retos juntos: agua, energía, calor, fuego y sismo. Son los cinco niveles del juego. |
+| 3 · **Caso hipotético** | Un jueves de El Niño en Dosquebradas, de la mañana a la noche: se acaba el agua, el calor aprieta, hay humo en la ladera, se va la luz y llega un temblor. |
+| 4 · **Las consecuencias** | Con el botón **«Si no se prepara» / «Si se prepara»** ves los dos finales de cada momento: la misma familia, el mismo día, preparada o no. |
+| 5 · **El reto** | Un hábito concreto para cambiar el final de cada momento, y el reto de cubrir los cinco frentes. |
+| 6 · **Tu estado** | Cuántos de los cinco **frentes** cubre tu familia hoy. Un frente cuenta como cubierto cuando **ganas al menos una jugada** en ese nivel. **«Aceptar el reto»** te lleva a Retos. |
+
+**Narrador con voz.** En el panel hay un botón **«Escuchar a EL JEFE»**: reproduce el **audio** de la escena, que cuenta lo que dice EL JEFE y el contenido de la escena (los momentos del caso, los finales, los hábitos…). **«Detener la voz»** lo corta. Con el selector **«Velocidad de la voz»** (Normal, Más rápida, Rápida) lo escuchas al ritmo que prefieras. Si marcas **«Narrar y avanzar solo»**, EL JEFE narra cada escena y pasa a la siguiente cuando termina (se recuerda en tu dispositivo). Al cerrar la ventana o cambiar de escena, la voz se calla.
+
+> Los audios son **voz grabada** y están en `src/assets/audio/narrador/`, uno por escena. Se pueden cambiar guardando el archivo con el mismo nombre. Si un audio no existe, el juego lee el texto con la voz de tu navegador o celular.
+
+> El caso es **ilustrativo**: no es un pronóstico ni una alerta oficial. Sirve para imaginar qué pasaría en tu casa y por qué los hábitos pequeños importan.
+
+---
+
 ## 3. Moverse por el juego
 
 Dentro del juego, arriba a la derecha, está tu **insignia y tus XP** y el botón de **menú (☰)**. Al tocarlo se despliega el menú con cinco secciones:
@@ -80,21 +103,29 @@ Hay un nivel por tema. Cada uno tiene su **salvador** (tu aliado), su **enemigo*
 | 4 · **Fuego** | Fuego Guardian | La Chispa |
 | 5 · **Sismo** | Sismo | Réplica |
 
-### 4.2 Una «jugada» son 6 hábitos
+### 4.2 Una «jugada»: 3 hábitos buenos contra 3 descuidos
 
-Cada nivel muestra **6 hábitos a la vez**. A ese conjunto se le llama **jugada**.
+Cada nivel muestra **6 tarjetas a la vez**: **3 hábitos buenos** y **3 descuidos**. A ese conjunto se le llama **jugada**. Es una **carrera entre dos barras de vida de 3**: la de tu **enemigo** y la de tu **salvador**.
 
-1. **Marca** un hábito cuando lo hayas cumplido (casilla a la derecha). Cada hábito suma **10 XP**.
-2. Cada hábito **le quita una barra de vida al enemigo** («Vida de Voraz Sequía 5/6»).
-3. Al marcar el **sexto**, el enemigo cae y aparece **«¡Jugada N completada!»** con tu **insignia** (ver el apartado 5) y los **6 hábitos nuevos** de la siguiente jugada.
+| Qué marcas | Qué pasa |
+|---|---|
+| Un **hábito bueno** (casilla de «Hábitos que hieren al enemigo») | Tu salvador lanza su señal y el enemigo pierde 1 de vida. Cada uno suma **20 XP**. |
+| Un **descuido** (casilla de «¿Caíste en algún descuido hoy?»): marcas **«Lo hice hoy»** | El enemigo se **fortalece** (se agranda) y ataca: tu salvador pierde 1 de vida. Reconocerlo suma **2 XP** por honestidad (hasta 3 al día). |
 
-Puedes **desmarcar** un hábito si te equivocaste: vuelve a su estado anterior.
+**Gana quien llegue primero a 3:**
+
+- **Victoria:** con tus **3 hábitos buenos** el enemigo cae. Aparece **«¡Jugada N completada!»** con tu **insignia** (ver el apartado 5) y los **3 hábitos buenos y 3 descuidos nuevos** de la siguiente jugada.
+- **Derrota:** si reconoces los **3 descuidos antes**, tu salvador cae. Aparece **«¡Tu salvador cayó!»** y te explica **cómo corregir cada descuido** con su hábito opuesto. **No pierdes XP**: la jugada se **repite con los mismos hábitos** y puedes ganarla.
+
+Puedes **desmarcar** cualquier casilla si te equivocaste: las barras vuelven a su estado anterior. Los descuidos **no cuentan** como hábitos buenos ni mantienen tu racha.
+
+> **¿Por qué reconocer un descuido?** Porque ser sincero es parte del juego: te da un pequeño premio y te muestra cómo mejorar. Mentirse a uno mismo no ayuda a preparar a tu familia.
 
 ### 4.3 Banco de hábitos
 
-Cada nivel guarda **18 hábitos**, o sea **3 jugadas**. Cuando completas una jugada, los 6 hábitos se reemplazan por 6 nuevos del banco. Al terminar la tercera jugada, el banco vuelve a empezar (repaso).
+Cada nivel guarda **18 hábitos buenos y 18 descuidos**, uno opuesto a cada hábito bueno. Una jugada usa 3 y 3, o sea que hay **6 jugadas distintas** por nivel. Cuando ganas una jugada, las tarjetas se reemplazan por 3 buenos y 3 descuidos nuevos. Al terminar la sexta jugada, el banco vuelve a empezar (repaso), y repetirlo sigue sumando XP.
 
-El avance de una jugada **se conserva entre días**: no hace falta cumplir los 6 hábitos el mismo día.
+El avance de una jugada **se conserva entre días**: no hace falta completarla el mismo día.
 
 ### 4.4 Animaciones de combate
 
@@ -106,7 +137,17 @@ Al marcar un hábito, **tu salvador lanza una señal al enemigo**, que cae al ot
 - **Fuego:** espuma de extintor.
 - **Sismo:** ondas de choque.
 
-Al impactar, el enemigo se sacude y la barra de vida parpadea. Con el sexto hábito se desintegra. Si tu dispositivo tiene activado el **movimiento reducido**, solo verás un destello breve.
+Al impactar, el enemigo se sacude y su barra de vida parpadea. Con el tercer hábito bueno se desintegra.
+
+Cuando reconoces un **descuido**, pasa al revés: el **enemigo se agranda y lanza una ráfaga de brasas** contra tu salvador, que se debilita y, con el tercer descuido, cae. Si tu dispositivo tiene activado el **movimiento reducido**, solo verás un destello breve.
+
+### 4.4b Sonido
+
+Las animaciones **suenan**: cada salvador tiene el sonido de su señal (gotas, rayo eléctrico, bruma, espuma, ondas graves), y hay sonidos para marcar un hábito, reconocer un descuido, el impacto, la caída del enemigo o del salvador, la victoria (con un destello extra si ganas una insignia), la derrota y la narrativa de EL JEFE.
+
+- El botón de **altavoz** del encabezado (junto al menú) **silencia o activa** el sonido; también está la casilla «Efectos de sonido» en la narrativa. Se recuerda en tu dispositivo.
+- Los sonidos son **efectos suaves y cortos**, no música, y se generan en tu dispositivo (no se descarga nada). El navegador solo deja sonar después de que tocas la pantalla, así que el primer sonido llega con tu primera acción.
+- Los mismos sonidos existen como **archivos de audio etiquetados** por la parte del juego (carpeta `src/assets/audio/`, con su `LEEME.md`) para escucharlos o reutilizarlos.
 
 ### 4.5 Nivel Fuego: prevención y preparación
 
@@ -119,18 +160,18 @@ Sobre la lista aparece **«¿Estás listo para la emergencia de fuego?»** con t
 
 ### 4.6 Indicadores de arriba
 
-En Retos verás cuatro tarjetas: **Hábitos hoy**, **Jugadas completadas**, **Racha** (días seguidos con al menos un hábito) y **Experiencia** (XP).
+En Retos verás cuatro tarjetas: **Hábitos buenos hoy**, **Jugadas ganadas**, **Racha** (días seguidos con al menos un hábito bueno) y **Experiencia** (XP).
 
 ---
 
 ## 5. Insignias
 
-Las insignias son como las de los **exploradores**: se ganan con el esfuerzo y se van acumulando en una **escalera**. Cada hábito que marcas suma **10 XP** y una jugada completa son **60 XP**. **Repetir** tus hábitos (jugada tras jugada, día tras día; el banco de cada nivel se repite al terminar) sigue sumando y te lleva más arriba.
+Las insignias son como las de los **exploradores**: se ganan con el esfuerzo y se van acumulando en una **escalera**. Cada hábito bueno que marcas suma **20 XP** y una jugada ganada (3 buenos) son **60 XP**. **Repetir** tus hábitos (jugada tras jugada, día tras día; el banco de cada nivel se repite al terminar) sigue sumando y te lleva más arriba.
 
 | Insignia | XP | Equivale a |
 |---|---|---|
 | **Aspirante** | 0 | El punto de partida. |
-| **Semilla** | 60 | Tu primera jugada completa. |
+| **Semilla** | 60 | Tu primera jugada ganada. |
 | **Explorador** | 180 | Unas 3 jugadas. |
 | **Guardián** | 400 | Unas 7 jugadas: los hábitos ya son costumbre. |
 | **Centinela** | 750 | Unas 13 jugadas. |
@@ -281,8 +322,11 @@ Todavía no existe: es una propuesta para una versión futura y el botón de la 
 **¿Puedo jugar desde otro celular con mi misma familia?**
 Todavía no: el ranking familiar funciona en un solo dispositivo. La sincronización llegará con la versión final.
 
-**¿Tengo que cumplir los 6 hábitos el mismo día?**
+**¿Tengo que completar la jugada el mismo día?**
 No. El avance de la jugada se conserva entre días.
+
+**¿Pierdo XP si cae mi salvador?**
+No. La jugada se repite con los mismos hábitos. Además, reconocer un descuido suma 2 XP (hasta 3 al día).
 
 **Marqué un hábito por error.**
 Desmárcalo tocando la casilla de nuevo.
@@ -301,7 +345,8 @@ Sí, una vez instalada o cargada, la app guarda lo necesario para abrirse sin co
 ## 15. Glosario
 
 - **Nivel:** cada uno de los cinco temas (Agua, Energía, Calor, Fuego, Sismo).
-- **Jugada:** un conjunto de 6 hábitos de un nivel.
+- **Jugada:** 3 hábitos buenos y 3 descuidos de un nivel, en una carrera entre dos barras de vida.
+- **Descuido:** un hábito negativo; marcarlo es reconocer que lo hiciste hoy y fortalece al enemigo.
 - **Insignia:** peldaño de la escalera (Aspirante a Leyenda) que se gana con XP.
 - **Salvador:** el aliado de cada nivel; lanza la señal contra el enemigo.
 - **Enemigo:** la amenaza de cada nivel, que pierde vida con tus hábitos.
@@ -313,4 +358,4 @@ Sí, una vez instalada o cargada, la app guarda lo necesario para abrirse sin co
 
 ---
 
-*¿Y si pasa hoy? es un juego serio diseñado por ARCADE. Prototipo en desarrollo; los consejos de seguridad son generales y no reemplazan las indicaciones de la gestión del riesgo municipal.*
+*NIDO (¿Y si pasa hoy?) es un juego serio diseñado por ARCADE. Prototipo en desarrollo; los consejos de seguridad son generales y no reemplazan las indicaciones de la gestión del riesgo municipal.*

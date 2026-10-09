@@ -1,7 +1,7 @@
 /**
  * Escalera de insignias, como las de los exploradores. La insignia se gana con la experiencia (XP) acumulada:
  * cada hábito marcado suma XP, así que cumplir y REPETIR hábitos (jugada tras jugada, día tras día) sube de
- * insignia. Una jugada completa son 60 XP.
+ * insignia. Una jugada ganada (3 hábitos buenos × 20 XP) son 60 XP.
  *
  * Es lo que se muestra al terminar un reto, en la cabecera, en el ranking personal y en el de la familia.
  * @module datos/insignias

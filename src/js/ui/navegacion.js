@@ -4,6 +4,7 @@
  * La página es de una sola pantalla (`index.html`): las «vistas» son secciones que se muestran u ocultan.
  *   'home'                                                  → portada
  *   'retos' | 'mochila' | 'agentes' | 'familia' | 'ranking' → zona de juego
+ * Al entrar a la zona de juego desde la portada se avisa a quien se haya registrado con `alEntrarAlJuego`.
  * Cualquier elemento con `data-go="vista"` navega a esa vista; con `data-scroll="id"` baja a esa sección de la portada.
  *
  * @module ui/navegacion
@@ -20,6 +21,12 @@ const VISTAS_DE_JUEGO = ['retos', 'mochila', 'agentes', 'familia', 'ranking'];
 
 let vista = 'home';
 
+/** Funciones que se llaman al pasar de la portada a la zona de juego (p. ej. la narrativa de EL JEFE). @type {((destino: string) => void)[]} */
+const oyentesDeEntrada = [];
+
+/** Registra una función que se llamará cada vez que alguien entra al juego desde la portada. @param {(destino: string) => void} funcion */
+export const alEntrarAlJuego = (funcion) => { oyentesDeEntrada.push(funcion); };
+
 /** Vista que se está mostrando. @returns {string} */
 export const vistaActual = () => vista;
 
@@ -30,6 +37,7 @@ export const vistaActual = () => vista;
 export function ir(destino) {
   const enJuego = VISTAS_DE_JUEGO.includes(destino);
   if (enJuego && !hayJugadorActivo()) { pedirApodo(() => ir(destino)); return; }
+  const veniaDeLaPortada = vista === 'home';
   vista = destino;
 
   $('#home').hidden = enJuego;
@@ -54,6 +62,7 @@ export function ir(destino) {
     particulasPortada.iniciar();
   }
   window.scrollTo(0, 0);
+  if (enJuego && veniaDeLaPortada) oyentesDeEntrada.forEach((f) => f(destino));
   const titulo = enJuego ? $(`#v-${destino} h1`) : null;
   if (titulo) { titulo.setAttribute('tabindex', '-1'); titulo.focus({ preventScroll: true }); }
 }

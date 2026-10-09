@@ -27,3 +27,7 @@ h1,h2,h3,h4,p{margin:0;text-wrap:balance} p{text-wrap:pretty}
 
 /* Reducir movimiento: sin animaciones ni transiciones para quien lo pide. */
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}}
+
+.slogan{font-family:var(--font-display);font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--cyan);margin:10px 0 0;font-size:clamp(.85rem,2.2vw,1.35rem)}
+.lema{font-family:var(--font-display);font-size:clamp(.75rem,1.6vw,.95rem);letter-spacing:.08em;color:var(--white);opacity:.85;margin:10px 0 0}
+.lema b{color:var(--cyan);font-weight:800;font-size:1.15em}

@@ -1,5 +1,5 @@
 /**
- * Service worker de «¿Y si pasa hoy?»: permite usar el juego sin conexión.
+ * Service worker de «NIDO»: permite usar el juego sin conexión.
  *
  * Estrategia: RED PRIMERO, con respaldo en la caché. Si hay internet siempre se muestra la versión más nueva
  * (y se guarda una copia); si no hay, se usa la última copia guardada.
@@ -10,7 +10,7 @@
  *
  * No intercepta `/api/` (el chat con la IA) ni `/downloads/`, ni peticiones a otros dominios.
  */
-const VERSION = 'ysph-v3';
+const VERSION = 'ysph-v17';
 
 /** Archivos que se guardan al instalar (rutas relativas a este archivo). */
 const NUCLEO = [
@@ -33,13 +33,18 @@ const NUCLEO = [
   'css/12-chat.css',
   'css/13-presentacion.css',
   'css/14-pie-y-avisos.css',
+  'css/15-caso.css',
   'js/config.js',
   'js/datos/agentes.js',
+  'js/datos/avatar-jefe.js',
+  'js/datos/caso.js',
+  'js/datos/habitos-malos.js',
   'js/datos/habitos.js',
   'js/datos/ilustraciones.js',
   'js/datos/insignias.js',
   'js/datos/mochila.js',
   'js/datos/niveles.js',
+  'js/datos/sonidos.js',
   'js/datos/sprites.js',
   'js/dominio/chat.js',
   'js/dominio/familia.js',
@@ -48,6 +53,7 @@ const NUCLEO = [
   'js/estado/almacen.js',
   'js/main.js',
   'js/ui/avisos.js',
+  'js/ui/caso.js',
   'js/ui/chat/arrastre.js',
   'js/ui/chat/cliente-ia.js',
   'js/ui/chat/panel.js',
@@ -58,18 +64,21 @@ const NUCLEO = [
   'js/ui/instalacion.js',
   'js/ui/kpis.js',
   'js/ui/mochila.js',
+  'js/ui/narrador.js',
   'js/ui/navegacion.js',
   'js/ui/particulas.js',
   'js/ui/presentacion.js',
   'js/ui/ranking.js',
   'js/ui/render.js',
   'js/ui/retos.js',
+  'js/ui/sonido.js',
   'js/ui/sprites.js',
   'js/ui/tarjetas.js',
   'js/ui/ventanas.js',
   'js/util/dom.js',
   'js/util/fecha.js',
   'js/util/texto.js',
+  'js/util/voz.js',
 ];
 
 self.addEventListener('install', (evento) => {

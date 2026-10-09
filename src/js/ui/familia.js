@@ -4,7 +4,7 @@
  * @module ui/familia
  */
 import { NOMBRE_FAMILIA_MAX, APODO } from '../config.js';
-import { mensajeDeApodoInvalido, ordenarFamilia } from '../dominio/familia.js';
+import { mensajeDeApodoInvalido, normalizarApodo, ordenarFamilia } from '../dominio/familia.js';
 import {
   apodosDeLaFamilia, enviarAnimo, inscribir, nombrarFamilia, quitarIntegrante, R,
 } from '../estado/almacen.js';
@@ -62,10 +62,11 @@ function formularioInscribir() {
   formulario.append(etiqueta, campo, inscribirBtn, error);
   formulario.addEventListener('submit', (e) => {
     e.preventDefault();
-    const apodo = campo.value.trim();
+    const apodo = normalizarApodo(campo.value);
+    campo.value = apodo;
     const mensaje = mensajeDeApodoInvalido(apodo, apodosDeLaFamilia());
     if (mensaje) {
-      error.textContent = mensaje;
+      error.textContent = `⚠ ${mensaje}`;
       campo.setAttribute('aria-invalid', 'true');
       campo.focus();
       return;

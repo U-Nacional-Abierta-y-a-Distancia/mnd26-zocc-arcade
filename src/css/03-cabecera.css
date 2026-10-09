@@ -42,3 +42,13 @@
 .apptabs button[aria-current="page"]{background:var(--cyan);border-color:var(--cyan);color:var(--void)}
 .apptabs svg{width:20px;height:20px;fill:currentColor;flex:none}
 @media (prefers-reduced-motion:reduce){.apptabs.open{animation:none}}
+
+/* Botón de sonido (silenciar / activar) en el encabezado de la zona de juego */
+.snd-btn{display:inline-grid;place-items:center;width:44px;height:44px;padding:0;background:transparent;border:1px solid var(--line-strong);color:var(--cyan);cursor:pointer;transition:border-color .2s,color .2s}
+.snd-btn:hover{border-color:var(--cyan)}
+.snd-btn:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+.snd-btn svg{width:22px;height:22px;fill:currentColor}
+.snd-btn .equis{display:none}
+.snd-btn.off{color:var(--slate)}
+.snd-btn.off .ondas{display:none}
+.snd-btn.off .equis{display:inline}

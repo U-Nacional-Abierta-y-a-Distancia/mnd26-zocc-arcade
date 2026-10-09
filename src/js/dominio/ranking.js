@@ -2,7 +2,7 @@
  * Cálculos de la sección Ranking: últimos días y dominio semanal por nivel. Sin DOM.
  * @module dominio/ranking
  */
-import { HABITOS_POR_JUGADA } from '../config.js';
+import { BUENOS_POR_JUGADA } from '../config.js';
 import { NIVELES } from '../datos/niveles.js';
 import { claveDia } from '../util/fecha.js';
 import { hechosEnDia } from './progreso.js';
@@ -28,7 +28,7 @@ export function ultimosDias(s, cuantos = 7, ahora = new Date()) {
 }
 
 /**
- * Porcentaje de dominio de cada nivel en los días dados: hábitos marcados / (6 hábitos × días).
+ * Porcentaje de dominio de cada nivel en los días dados: hábitos buenos marcados / (3 hábitos × días), con tope de 100 %.
  * @param {Estado} s
  * @param {{clave: string}[]} dias
  * @returns {{nivel: string, porcentaje: number}[]}
@@ -36,6 +36,6 @@ export function ultimosDias(s, cuantos = 7, ahora = new Date()) {
 export function dominioSemanal(s, dias) {
   return NIVELES.map((nivel) => {
     const total = dias.reduce((n, d) => n + hechosEnDia(s, nivel, d.clave), 0);
-    return { nivel: nivel.nombre, porcentaje: Math.round((total / (HABITOS_POR_JUGADA * dias.length)) * 100) };
+    return { nivel: nivel.nombre, porcentaje: Math.min(100, Math.round((total / (BUENOS_POR_JUGADA * dias.length)) * 100)) };
   });
 }

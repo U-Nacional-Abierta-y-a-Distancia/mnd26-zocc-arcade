@@ -2,7 +2,7 @@
  * Identificación del jugador: ventana de nickname y cambio de jugador.
  * @module ui/identidad
  */
-import { mensajeDeApodoInvalido } from '../dominio/familia.js';
+import { mensajeDeApodoInvalido, normalizarApodo } from '../dominio/familia.js';
 import {
   activarJugador, apodosDeLaFamilia, consumirAnimo, guardar, inscribir,
 } from '../estado/almacen.js';
@@ -81,10 +81,11 @@ export function pedirApodo(alTerminar, alCancelar) {
   const error = $('.nk-err', formulario);
   formulario.addEventListener('submit', (e) => {
     e.preventDefault();
-    const apodo = campo.value.trim();
+    const apodo = normalizarApodo(campo.value);
+    campo.value = apodo; // si había espacios, se ve cómo quedó («Los_Salazar»)
     const mensaje = mensajeDeApodoInvalido(apodo, apodosDeLaFamilia());
     if (mensaje) {
-      error.textContent = mensaje;
+      error.textContent = `⚠ ${mensaje}`;
       campo.setAttribute('aria-invalid', 'true');
       campo.focus();
       return;

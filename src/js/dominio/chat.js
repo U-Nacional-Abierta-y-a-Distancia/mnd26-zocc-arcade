@@ -4,12 +4,12 @@
  * de seguridad (las emergencias SIEMPRE se responden en local, sin esperar a la IA).
  * @module dominio/chat
  */
-import { HABITOS_POR_JUGADA, XP_POR_HABITO } from '../config.js';
+import { BUENOS_POR_JUGADA, XP_POR_HABITO } from '../config.js';
 import { INSIGNIAS } from '../datos/insignias.js';
 import { NIVELES } from '../datos/niveles.js';
 import { normalizar } from '../util/texto.js';
 import {
-  habitosActivos, hechoAlgunaVez, hechosEnJugada, indiceInsignia, jugadaDe, jugadasCompletas,
+  habitosActivos, hechoAlgunaVez, hechosEnJugada, indiceInsignia, jugadaDe, jugadasCompletas, malosEnJugada,
   preparacionFuego, rachaDe, siguienteNivel, textoDeHabito, xpDe,
 } from './progreso.js';
 
@@ -20,6 +20,7 @@ export const RESPUESTAS_POR_TEMA = [
   [/gas|huelo/, 'Si huele a gas: no enciendas luces, fósforos ni aparatos eléctricos. Abre puertas y ventanas, cierra la llave del gas si puedes hacerlo con seguridad, sal con tu familia y llama al 123 desde afuera.'],
   [/incendio|fuego|quema|colilla|extintor|chispa/, 'Prevención: nada de quemas, colillas ni vidrio en lotes y laderas; revisa estufa, gas, cables y velas. Si hay un fuego pequeño y tienes extintor, puede bastar; si crece, no lo enfrentes: sal, no vuelvas por objetos y llama al 123.'],
   [/sismo|temblor|terremoto|replica/, 'Durante un temblor: agáchate, cúbrete y sujétate lejos de ventanas y objetos que caigan. Cuando pase, sal con calma por la ruta acordada, sin ascensores, y ve al punto de encuentro. Asegura muebles altos y practica la ruta en familia.'],
+  [/descuido|mal habito|malos habitos|habito malo|habitos malos|derrota|pierd|cae mi salvador/, 'En cada jugada hay 3 hábitos buenos y 3 descuidos. Cada hábito bueno hiere al enemigo: con 3, tu salvador gana. Reconocer un descuido hiere a tu salvador: si reconoces 3 antes de lograr los 3 buenos, cae y repites la jugada con los mismos hábitos, sin perder XP. Ser sincero suma 2 XP y te muestro cómo corregirlo.'],
   [/mochila|kit/, 'Tu mochila de emergencia lleva agua, alimentos no perecederos, botiquín, linterna, radio de pilas, silbato, documentos en bolsa sellada y dinero en efectivo. Ármala ítem por ítem en la pestaña Mochila.'],
   [/agua|fuga|grifo|llave|sequia/, 'Cierra la llave mientras te cepillas o enjabonas, reporta fugas, reutiliza el agua del enjuague, riega temprano o al atardecer y guarda agua en recipientes limpios y tapados.'],
   [/energia|luz|cargador|bombillo|nevera|vampiro/, 'Apaga las luces al salir, desconecta cargadores y equipos, ventila antes de usar el ventilador, usa LED y junta la ropa para planchar o lavar en tandas.'],
@@ -66,8 +67,8 @@ function mensajeSiguiente(s) {
   const nivel = NIVELES[i];
   const jugada = jugadaDe(s, nivel);
   const ejemplo = habitosActivos(s, nivel).find((h) => !jugada.done.includes(h.id));
-  const faltan = HABITOS_POR_JUGADA - hechosEnJugada(s, nivel);
-  return `Te conviene el nivel ${i + 1} (${nivel.nombre}): te faltan ${faltan} hábitos para completar la jugada ${jugada.r}. Por ejemplo: ${entre(ejemplo.texto)}.`;
+  const faltan = BUENOS_POR_JUGADA - hechosEnJugada(s, nivel);
+  return `Te conviene el nivel ${i + 1} (${nivel.nombre}): te faltan ${faltan} hábitos buenos para ganar la jugada ${jugada.r}. Por ejemplo: ${entre(ejemplo.texto)}.`;
 }
 
 /** Insignia actual y lo que falta para la siguiente. @param {Estado} s @returns {string} */
@@ -95,7 +96,7 @@ function mensajePreparacion(s) {
 function mensajeProgreso(s) {
   const xp = xpDe(s);
   const racha = rachaDe(s.days);
-  return `Llevas ${xp} XP, insignia ${INSIGNIAS[indiceInsignia(xp)].nombre}, racha de ${racha} ${racha === 1 ? 'día' : 'días'} y ${jugadasCompletas(s)} jugadas completadas.`;
+  return `Llevas ${xp} XP, insignia ${INSIGNIAS[indiceInsignia(xp)].nombre}, racha de ${racha} ${racha === 1 ? 'día' : 'días'} y ${jugadasCompletas(s)} jugadas ganadas.`;
 }
 
 /**
@@ -118,7 +119,7 @@ export function responderLocal(texto, s) {
  * Resumen del juego que se envía a la IA. Son SOLO números: nunca el nickname ni datos personales.
  * El servidor lo vuelve a validar y lo convierte en texto (ver `servidor-jefe`).
  * @param {Estado} s
- * @returns {{xp:number, insignia:number, racha:number, jugadas:number, fuego:number, niveles:{j:number, h:number, c:number}[]}}
+ * @returns {{xp:number, insignia:number, racha:number, jugadas:number, fuego:number, niveles:{j:number, h:number, m:number, c:number, l:number}[]}}
  */
 export function contextoParaIA(s) {
   const xp = xpDe(s);
@@ -130,7 +131,7 @@ export function contextoParaIA(s) {
     fuego: preparacionFuego(s),
     niveles: NIVELES.map((nivel) => {
       const j = jugadaDe(s, nivel);
-      return { j: j.r, h: hechosEnJugada(s, nivel), c: j.c || 0 };
+      return { j: j.r, h: hechosEnJugada(s, nivel), m: malosEnJugada(s, nivel), c: j.c || 0, l: j.l || 0 };
     }),
   };
 }

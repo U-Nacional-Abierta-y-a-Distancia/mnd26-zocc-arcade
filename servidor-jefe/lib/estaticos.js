@@ -11,6 +11,7 @@ const TIPOS = {
   '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
   '.json': 'application/json; charset=utf-8', '.webmanifest': 'application/manifest+json', '.svg': 'image/svg+xml',
   '.png': 'image/png', '.jpg': 'image/jpeg', '.webp': 'image/webp', '.ico': 'image/x-icon', '.md': 'text/markdown; charset=utf-8',
+  '.wav': 'audio/wav', '.mp3': 'audio/mpeg', '.ogg': 'audio/ogg', '.txt': 'text/plain; charset=utf-8',
 };
 
 /**
@@ -40,7 +41,24 @@ export function crearServidorEstatico(dirWeb, rutasExtra = {}) {
         res.end('No encontrado');
         return;
       }
-      res.writeHead(200, { 'Content-Type': TIPOS[path.extname(archivo).toLowerCase()] || 'application/octet-stream', 'Cache-Control': 'no-cache' });
+      const cabeceras = {
+        'Content-Type': TIPOS[path.extname(archivo).toLowerCase()] || 'application/octet-stream',
+        'Cache-Control': 'no-cache',
+        'Accept-Ranges': 'bytes', // el audio y el video lo necesitan para conocer su duración y poder adelantarse
+      };
+      // Rango de bytes (p. ej. «bytes=0-» o «bytes=1000-1999»): los reproductores de audio lo piden.
+      const rango = /^bytes=(\d*)-(\d*)$/.exec(String(req.headers.range || ''));
+      if (rango && (rango[1] || rango[2])) {
+        let inicio = rango[1] ? Number(rango[1]) : st.size - Number(rango[2]);
+        let fin = rango[1] && rango[2] ? Number(rango[2]) : st.size - 1;
+        inicio = Math.max(0, inicio); fin = Math.min(fin, st.size - 1);
+        if (inicio > fin) { res.writeHead(416, { 'Content-Range': `bytes */${st.size}` }); res.end(); return; }
+        res.writeHead(206, { ...cabeceras, 'Content-Range': `bytes ${inicio}-${fin}/${st.size}`, 'Content-Length': fin - inicio + 1 });
+        if (req.method === 'HEAD') { res.end(); return; }
+        fs.createReadStream(archivo, { start: inicio, end: fin }).pipe(res);
+        return;
+      }
+      res.writeHead(200, { ...cabeceras, 'Content-Length': st.size });
       if (req.method === 'HEAD') { res.end(); return; }
       fs.createReadStream(archivo).pipe(res);
     });

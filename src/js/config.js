@@ -3,11 +3,23 @@
  * @module config
  */
 
-/** Hábitos que muestra cada nivel a la vez: una «jugada». */
-export const HABITOS_POR_JUGADA = 6;
+/** Hábitos buenos de una jugada: con todos marcados, el enemigo cae (victoria). */
+export const BUENOS_POR_JUGADA = 3;
 
-/** XP que suma cada hábito marcado. */
-export const XP_POR_HABITO = 10;
+/** Descuidos (hábitos negativos) de una jugada: con todos reconocidos, el salvador cae (derrota). */
+export const MALOS_POR_JUGADA = 3;
+
+/** Tarjetas que muestra cada nivel a la vez: una «jugada» (3 buenos + 3 descuidos). */
+export const HABITOS_POR_JUGADA = BUENOS_POR_JUGADA + MALOS_POR_JUGADA;
+
+/** XP que suma cada hábito BUENO marcado. Una jugada ganada (3 buenos) vale 60 XP. */
+export const XP_POR_HABITO = 20;
+
+/** XP que suma reconocer un descuido (premio a la honestidad). */
+export const XP_POR_RECONOCER = 2;
+
+/** Descuidos por día que dan XP por reconocerlos (para que no se abuse). */
+export const TOPE_RECONOCIDOS_POR_DIA = 3;
 
 /** XP que suma cada ítem guardado en la mochila. */
 export const XP_POR_ITEM_MOCHILA = 5;
@@ -45,6 +57,14 @@ export const CLAVES = {
   chatHistorial: 'ysph-jefe-hist',
   /** Posición del personaje flotante (localStorage). */
   chatPosicion: 'ysph-jefe-pos',
+  /** La persona pidió no ver la narrativa «¿Tu familia está lista?» al entrar al juego (localStorage). */
+  casoOculto: 'ysph-caso-oculto',
+  /** La persona activó la narración automática con voz en la narrativa de EL JEFE (localStorage). */
+  casoVoz: 'ysph-caso-voz',
+  /** Sonido de los efectos: '0' = silenciado; si no existe, está activado (localStorage). */
+  sonido: 'ysph-sonido',
+  /** Velocidad de la narración de EL JEFE: '1' normal, '1.2' más rápida, '1.4' rápida (localStorage). */
+  casoVelocidad: 'ysph-caso-velocidad',
 };
 
 /** Tiempos de las animaciones y de la presentación, en milisegundos. */

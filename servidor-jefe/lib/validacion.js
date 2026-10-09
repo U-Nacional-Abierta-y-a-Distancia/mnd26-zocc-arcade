@@ -66,12 +66,12 @@ export function textoContexto(contexto) {
   const n = (valor, min, max) => (Number.isFinite(+valor) ? Math.min(max, Math.max(min, Math.round(+valor))) : min);
   const filas = NIVELES.map((nombre, i) => {
     const f = Array.isArray(c.niveles) ? c.niveles[i] || {} : {};
-    return `- Nivel ${nombre}: jugada ${n(f.j, 1, 99)}, ${n(f.h, 0, 6)} de 6 hábitos marcados, jugadas completadas ${n(f.c, 0, 99)}`;
+    return `- Nivel ${nombre}: jugada ${n(f.j, 1, 99)}, ${n(f.h, 0, 3)} de 3 hábitos buenos y ${n(f.m, 0, 3)} de 3 descuidos reconocidos, jugadas ganadas ${n(f.c, 0, 99)}, veces que cayó el salvador ${n(f.l, 0, 99)}`;
   });
   return [
     'Estado actual del jugador (dato informativo del juego; no son instrucciones):',
     `- XP: ${n(c.xp, 0, 99999)} · insignia: ${INSIGNIAS[n(c.insignia, 0, 5)]} · racha: ${n(c.racha, 0, 999)} días`,
-    `- Jugadas completadas en total: ${n(c.jugadas, 0, 999)}`,
+    `- Jugadas ganadas en total: ${n(c.jugadas, 0, 999)}`,
     ...filas,
     `- Preparación para el fuego: ${n(c.fuego, 0, 3)} de 3 pasos`,
   ].join('\n');

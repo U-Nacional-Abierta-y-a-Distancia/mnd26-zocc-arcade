@@ -5,9 +5,20 @@
 import { APODO, FAMILIA } from '../config.js';
 import { INSIGNIAS } from '../datos/insignias.js';
 import { claveDia, numeroDeDia } from '../util/fecha.js';
-import { indiceInsignia, rachaDe, xpDe } from './progreso.js';
+import { buenosDe, indiceInsignia, rachaDe, xpDe } from './progreso.js';
 
 /** @typedef {import('./progreso.js').Estado} Estado */
+
+/**
+ * Prepara lo que la persona escribió como nickname: quita los espacios de los extremos y convierte los espacios
+ * del medio en guion bajo («Los Salazar» → «Los_Salazar»), porque el nickname no admite espacios y la mayoría de la
+ * gente escribe su nombre con ellos.
+ * @param {string} texto
+ * @returns {string}
+ */
+export function normalizarApodo(texto) {
+  return String(texto).trim().replace(/\s+/g, '_');
+}
 
 /**
  * Comprueba un nickname.
@@ -17,7 +28,7 @@ import { indiceInsignia, rachaDe, xpDe } from './progreso.js';
  */
 export function mensajeDeApodoInvalido(apodo, apodosExistentes) {
   if (!APODO.patron.test(apodo)) {
-    return `Usa de ${APODO.min} a ${APODO.max} letras, números, guion o guion bajo, sin espacios.`;
+    return `No se puede usar ese nickname. Usa de ${APODO.min} a ${APODO.max} letras, números, guion o guion bajo (sin símbolos como @ o #).`;
   }
   const repetido = apodosExistentes.some((a) => a.toLowerCase() === apodo.toLowerCase());
   if (repetido) return 'Ese nickname ya está inscrito en tu familia. Elige otro.';
@@ -36,7 +47,7 @@ export function mensajeDeApodoInvalido(apodo, apodosExistentes) {
  * @property {number} xp
  * @property {string} insignia       Nombre de la insignia que tiene.
  * @property {number} racha
- * @property {number} hoy            Hábitos marcados hoy.
+ * @property {number} hoy            Hábitos buenos marcados hoy.
  * @property {number} jugadas        Jugadas completadas.
  * @property {number|null} diasSinMarcar  Días desde su última actividad (null si nunca marcó nada).
  * @property {string|null} ultimoDia
@@ -57,7 +68,7 @@ export function estadisticasDe(apodo, miembro, hoyClave = claveDia(), ahora = ne
   const dias = miembro.days || {};
   let ultimoDia = null;
   for (const [clave, lista] of Object.entries(dias)) {
-    if (lista.length && (!ultimoDia || clave > ultimoDia)) ultimoDia = clave;
+    if (buenosDe(lista).length && (!ultimoDia || clave > ultimoDia)) ultimoDia = clave;
   }
   const xp = xpDe({ days: dias, kit: miembro.kit || [], fam: 0 });
   const jugadas = Object.values(miembro.rd || {}).reduce((n, j) => n + (j.c || 0), 0);
@@ -66,7 +77,7 @@ export function estadisticasDe(apodo, miembro, hoyClave = claveDia(), ahora = ne
     xp,
     insignia: INSIGNIAS[indiceInsignia(xp)].nombre,
     racha: rachaDe(dias, ahora),
-    hoy: (dias[hoyClave] || []).length,
+    hoy: buenosDe(dias[hoyClave] || []).length,
     jugadas,
     diasSinMarcar: ultimoDia ? numeroDeDia(hoyClave) - numeroDeDia(ultimoDia) : null,
     ultimoDia,

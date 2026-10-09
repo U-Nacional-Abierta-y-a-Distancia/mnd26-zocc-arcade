@@ -1,6 +1,9 @@
 /**
- * Animación de combate: cuando se marca un hábito, el salvador del nivel lanza una señal simbólica contra el
- * enemigo (gotas, rayo, bruma, espuma u ondas), el enemigo recibe el golpe y, con el sexto hábito, se desintegra.
+ * Animación de combate. Dos direcciones:
+ *  - hábito BUENO: el salvador del nivel lanza una señal simbólica contra el enemigo (gotas, rayo, bruma, espuma u
+ *    ondas), el enemigo recibe el golpe y, con el tercero, se desintegra;
+ *  - DESCUIDO reconocido: el enemigo se agranda y lanza una ráfaga de brasas contra el salvador, que recibe el golpe
+ *    y, con el tercero, cae.
  *
  * Todo se hace con la Web Animations API (`elemento.animate`) sobre elementos temporales que se eliminan solos.
  * Con «reducir movimiento» solo hay un destello breve.
@@ -8,10 +11,11 @@
  * @module ui/combate
  */
 import { ENEMIGOS } from '../datos/agentes.js';
-import { hechosEnJugada } from '../dominio/progreso.js';
+import { hechosEnJugada, malosEnJugada } from '../dominio/progreso.js';
 import { S } from '../estado/almacen.js';
 import { $, $$, el, reducirMovimiento } from '../util/dom.js';
 import { avisar, confeti } from './avisos.js';
+import { sonar } from './sonido.js';
 
 /** Tipo de señal que lanza el salvador de cada nivel. */
 const SENAL_POR_NIVEL = { agua: 'gotas', energia: 'rayo', calor: 'bruma', fuego: 'espuma', sismo: 'ondas' };
@@ -154,6 +158,7 @@ function impacto(capa, destino, enemigo) {
 
 /** El enemigo se desintegra, sale confeti y reaparece para la siguiente jugada. */
 function derrotar(nivel, enemigo) {
+  sonar('enemigo-cae');
   const caja = enemigo.getBoundingClientRect();
   confeti(caja.left + caja.width / 2, caja.top + caja.height / 2);
   avisar(`${ENEMIGOS[nivel.enemigo].nombre} derrotado`);
@@ -193,6 +198,7 @@ export function lanzarSenal(nivel, zona, completa) {
     const dx = destino.x - origen.x; const dy = destino.y - origen.y;
 
     if (reducirMovimiento) {
+      sonar('impacto');
       enemigo.animate([{ filter: 'brightness(2.4)' }, { filter: 'none' }], { duration: 260 });
       if (completa) avisar(`${ENEMIGOS[nivel.enemigo].nombre} derrotado`);
       return;
@@ -207,11 +213,13 @@ export function lanzarSenal(nivel, zona, completa) {
     ], { duration: 420, easing: 'ease-out' });
 
     const tipo = SENAL_POR_NIVEL[nivel.id] || 'gotas';
+    sonar(`senal-${tipo}`);
     const msHastaImpacto = SENALES[tipo](capa, origen, destino, dx, dy);
 
     setTimeout(() => {
       try {
         impacto(capa, destino, enemigo);
+        sonar('impacto');
         if (tipo === 'ondas') {
           arena.animate([
             { transform: 'translateX(0)' }, { transform: 'translateX(-3px)' }, { transform: 'translateX(3px)' },
@@ -228,6 +236,117 @@ export function lanzarSenal(nivel, zona, completa) {
           setTimeout(() => derrotar(nivel, enemigo), 150);
         }
       } catch { /* la animación es decorativa: un fallo no debe afectar al juego */ }
+    }, msHastaImpacto + ARMADO_MS);
+  } catch { /* idem */ }
+}
+
+/* ------------------------------------------------------------------ ataque del enemigo (descuidos) */
+
+/** Ráfaga de brasas del enemigo hacia el salvador. Devuelve ms hasta el impacto. */
+function rafagaDelEnemigo(capa, origen, destino) {
+  for (let i = 0; i < 8; i += 1) {
+    const desvio = (Math.random() - 0.5) * 36;
+    lanzarSenalElemento(capa,
+      `width:11px;height:11px;margin:-5px 0 0 -5px;background:${i % 3 ? '#FF8A3D' : '#FFD36B'};border-radius:2px;box-shadow:0 0 12px #FF8A3D`,
+      [
+        { transform: mover(origen, 0.6), opacity: 1 },
+        { transform: mover({ x: (origen.x + destino.x) / 2, y: (origen.y + destino.y) / 2 - 30 + desvio }, 1), opacity: 1, offset: 0.5 },
+        { transform: mover({ x: destino.x, y: destino.y + desvio * 0.5 }, 1.4), opacity: 0.9 },
+      ],
+      { duration: 520, delay: i * 50, easing: 'ease-in', fill: 'backwards' });
+  }
+  return 520 + 7 * 50;
+}
+
+/** El salvador recibe el golpe: chispas y destello. */
+function impactoEnSalvador(capa, destino, salvador) {
+  for (let i = 0; i < 10; i += 1) {
+    const angulo = (i / 10) * Math.PI * 2;
+    const radio = 24 + Math.random() * 22;
+    lanzarElemento(capa,
+      `width:7px;height:7px;margin:-3px 0 0 -3px;background:${i % 2 ? '#99FFFF' : '#fff'};box-shadow:0 0 8px #99FFFF`,
+      [
+        { transform: mover(destino, 1), opacity: 1 },
+        { transform: mover({ x: destino.x + Math.cos(angulo) * radio, y: destino.y + Math.sin(angulo) * radio }, 0.3), opacity: 0 },
+      ],
+      { duration: 430, easing: 'ease-out' });
+  }
+  salvador.animate([
+    { transform: 'translateX(0)', filter: 'brightness(1)' },
+    { transform: 'translateX(8px)', filter: 'brightness(2.6) saturate(0)' },
+    { transform: 'translateX(-6px)', filter: 'brightness(1.5)' },
+    { transform: 'translateX(0)', filter: 'brightness(1)' },
+  ], { duration: 340 });
+}
+
+/** El salvador cae (se apaga) y reaparece para reintentar la jugada. */
+function caerSalvador(nivel, salvador) {
+  avisar('Tu salvador cayó: repite la jugada');
+  sonar('salvador-cae');
+  const caida = salvador.animate([
+    { transform: 'scale(1)', opacity: 1, filter: 'brightness(1)' },
+    { transform: 'scale(1.05) rotate(-6deg)', opacity: 1, filter: 'brightness(2.4) saturate(0)', offset: 0.3 },
+    { transform: 'scale(.7) rotate(-14deg) translateY(14px)', opacity: 0.15, filter: 'grayscale(1)' },
+  ], { duration: 720, easing: 'ease-in', fill: 'forwards' });
+  caida.onfinish = () => {
+    caida.cancel();
+    salvador.animate([{ opacity: 0, transform: 'scale(.7)' }, { opacity: 1, transform: 'scale(1)' }], { duration: 480 });
+  };
+}
+
+/**
+ * Animación de un descuido reconocido: el enemigo se hace fuerte y ataca al salvador.
+ * @param {import('../datos/niveles.js').Nivel} nivel
+ * @param {{arena: HTMLElement, izquierda: HTMLElement, derecha: HTMLElement, vidaAliada: HTMLElement}} zona
+ * @param {boolean} derrota  true si este descuido hizo caer al salvador.
+ */
+export function lanzarAtaque(nivel, zona, derrota) {
+  try {
+    const { arena } = zona;
+    const base = arena.getBoundingClientRect();
+    let capa = $('.fxl', arena);
+    if (!capa) {
+      capa = el('div', 'fxl');
+      capa.setAttribute('aria-hidden', 'true');
+      arena.appendChild(capa);
+    }
+    const enemigo = /** @type {HTMLElement} */ ($('.pic', zona.derecha));
+    const salvador = /** @type {HTMLElement} */ ($('.pic', zona.izquierda));
+    const origen = centroDe(enemigo, base);
+    const destino = centroDe(salvador, base);
+    origen.x -= 30; // sale de frente del enemigo
+
+    if (reducirMovimiento) {
+      sonar('golpe');
+      salvador.animate([{ filter: 'brightness(2.4) saturate(0)' }, { filter: 'none' }], { duration: 260 });
+      if (derrota) avisar('Tu salvador cayó: repite la jugada');
+      return;
+    }
+
+    // El enemigo «crece» y embiste antes de lanzar.
+    enemigo.animate([
+      { transform: 'translateX(0) scale(1)', filter: 'brightness(1)' },
+      { transform: 'translateX(10px) scale(1.12)', filter: 'brightness(1.6) hue-rotate(-12deg)', offset: 0.4 },
+      { transform: 'translateX(-14px) scale(1.18)', filter: 'brightness(2)', offset: 0.65 },
+      { transform: 'translateX(0) scale(1)', filter: 'brightness(1)' },
+    ], { duration: 420, easing: 'ease-out' });
+
+    sonar('rafaga');
+    const msHastaImpacto = rafagaDelEnemigo(capa, origen, destino);
+    setTimeout(() => {
+      try {
+        impactoEnSalvador(capa, destino, salvador);
+        sonar('golpe');
+        if (!derrota) { // la barra de vida del salvador: el segmento recién apagado parpadea
+          const segmento = $$('i', zona.vidaAliada)[malosEnJugada(S, nivel) - 1];
+          if (segmento) {
+            segmento.classList.add('hit');
+            setTimeout(() => segmento.classList.remove('hit'), 520);
+          }
+        } else {
+          setTimeout(() => caerSalvador(nivel, salvador), 150);
+        }
+      } catch { /* decorativa */ }
     }, msHastaImpacto + ARMADO_MS);
   } catch { /* idem */ }
 }

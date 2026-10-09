@@ -1,61 +1,80 @@
 /**
- * Sección Retos: una tarjeta por nivel con su arena (salvador contra enemigo), la barra de vida del enemigo
- * y la lista de los 6 hábitos de la jugada en curso.
+ * Sección Retos: una tarjeta por nivel con su arena (salvador contra enemigo), las dos barras de vida y las dos
+ * listas de la jugada en curso: 3 hábitos BUENOS (hieren al enemigo) y 3 DESCUIDOS (hieren al salvador).
  *
- * Flujo al marcar un hábito:
- *   casilla → `registrarMarca` (regla del juego) → guardar → redibujar todo → animación de combate →
- *   si se completó la jugada, ventana de la insignia (tras dejar ver caer al enemigo).
+ * Flujo al marcar:
+ *   casilla → `registrarMarca` (regla del juego) → guardar → redibujar todo → animación (señal del salvador o ataque
+ *   del enemigo) → si alguien cayó, ventana de victoria (insignia) o de derrota (tras dejar ver el golpe final).
  *
  * @module ui/retos
  */
-import { HABITOS_POR_JUGADA, TIEMPOS, XP_POR_HABITO } from '../config.js';
+import { BUENOS_POR_JUGADA, MALOS_POR_JUGADA, TIEMPOS, XP_POR_HABITO } from '../config.js';
 import { AGENTES, ENEMIGOS } from '../datos/agentes.js';
 import { ICONOS_HABITO } from '../datos/ilustraciones.js';
 import { INSIGNIAS } from '../datos/insignias.js';
-import { NIVELES } from '../datos/niveles.js';
+import { NIVELES, esHabitoMalo } from '../datos/niveles.js';
 import {
-  habitosActivos, hechoAlgunaVez, hechosEnJugada, indiceInsignia, jugadaDe, jugadasCompletas, rachaDe, registrarMarca, xpDe,
+  buenosDe, hechoAlgunaVez, indiceInsignia, jugadaDe, jugadasCompletas, loteActivo, rachaDe, registrarMarca, vidaDeJugada, xpDe,
 } from '../dominio/progreso.js';
 import { guardar, S } from '../estado/almacen.js';
 import { $, $$, el, reducirMovimiento } from '../util/dom.js';
 import { hoy } from '../util/fecha.js';
 import { diasTexto } from '../util/texto.js';
 import { avisar } from './avisos.js';
-import { lanzarSenal } from './combate.js';
+import { lanzarAtaque, lanzarSenal } from './combate.js';
 import { crearInsignia } from './insignias.js';
 import { pintarKpis } from './kpis.js';
 import { renderTodo } from './render.js';
+import { sonar } from './sonido.js';
 import { ladoDeSalvadores, ladoDelEnemigo } from './tarjetas.js';
 import { hayVentana, mostrarPendiente, programar } from './ventanas.js';
 
 /**
  * Elementos de la tarjeta de cada nivel, por id de nivel.
  * @type {Record<string, {caja: HTMLElement, nivelTxt: HTMLElement, insigniaTxt: HTMLElement, arena: HTMLElement,
- *   izquierda: HTMLElement, derecha: HTMLElement, vidaTxt: HTMLElement, vida: HTMLElement, mensaje: HTMLElement,
- *   preparacion: HTMLElement | null, lista: HTMLElement}>}
+ *   izquierda: HTMLElement, derecha: HTMLElement, vidaTxt: HTMLElement, vida: HTMLElement,
+ *   vidaAliadaTxt: HTMLElement, vidaAliada: HTMLElement, mensaje: HTMLElement,
+ *   preparacion: HTMLElement | null, lista: HTMLElement, listaMalos: HTMLElement}>}
  */
 const zonas = {};
 
-/** Lista de hábitos de un nivel y segmentos de la barra de vida. Se reconstruye al cambiar de jugada o de jugador. @param {import('../datos/niveles.js').Nivel} nivel */
+/** Fila de una lista: casilla + icono + texto + XP o aviso. @param {import('../datos/habitos.js').Habito} habito @param {boolean} malo */
+function filaDeHabito(habito, malo) {
+  const fila = el('li', malo ? 'reto malo' : 'reto');
+  const pie = malo ? 'Lo hice hoy' : `+${XP_POR_HABITO} XP`;
+  fila.innerHTML = `<input type="checkbox" id="r-${habito.id}"><label for="r-${habito.id}"><img alt="" width="32" height="32"><span><span class="t"></span><span class="xp">${pie}</span></span><span class="chk" aria-hidden="true"></span></label>`;
+  /** @type {HTMLImageElement} */ ($('img', fila)).src = ICONOS_HABITO[habito.icono];
+  $('.t', fila).textContent = habito.texto;
+  return fila;
+}
+
+/** Segmentos de una barra de vida. @param {HTMLElement} barra */
+function segmentos(barra) {
+  barra.innerHTML = '';
+  for (let i = 0; i < BUENOS_POR_JUGADA; i += 1) barra.appendChild(el('i'));
+}
+
+/**
+ * Las dos listas de un nivel y los segmentos de las barras de vida. Se reconstruye al cambiar de jugada o de jugador.
+ * @param {import('../datos/niveles.js').Nivel} nivel
+ */
 export function construirLista(nivel) {
   const zona = zonas[nivel.id];
-  const activos = habitosActivos(S, nivel);
+  const { buenos, malos } = loteActivo(S, nivel);
   zona.lista.innerHTML = '';
-  zona.vida.innerHTML = '';
-  activos.forEach(() => zona.vida.appendChild(el('i')));
+  zona.listaMalos.innerHTML = '';
+  segmentos(zona.vida);
+  segmentos(zona.vidaAliada);
 
   let grupoActual = null;
-  activos.forEach((habito) => {
+  buenos.forEach((habito) => {
     if (habito.grupo && habito.grupo !== grupoActual) { // subtítulo de grupo (nivel Fuego)
       grupoActual = habito.grupo;
       zona.lista.appendChild(el('li', 'rg', habito.grupo));
     }
-    const fila = el('li', 'reto');
-    fila.innerHTML = `<input type="checkbox" id="r-${habito.id}"><label for="r-${habito.id}"><img alt="" width="32" height="32"><span><span class="t"></span><span class="xp">+${XP_POR_HABITO} XP</span></span><span class="chk" aria-hidden="true"></span></label>`;
-    /** @type {HTMLImageElement} */ ($('img', fila)).src = ICONOS_HABITO[habito.icono];
-    $('.t', fila).textContent = habito.texto;
-    zona.lista.appendChild(fila);
+    zona.lista.appendChild(filaDeHabito(habito, false));
   });
+  malos.forEach((habito) => zona.listaMalos.appendChild(filaDeHabito(habito, true)));
 }
 
 /** Reconstruye las listas de todos los niveles (cambio de jugador, reinicio…). */
@@ -63,20 +82,25 @@ export function reconstruirListas() {
   NIVELES.forEach(construirLista);
 }
 
-/** Una persona marcó o desmarcó un hábito. @param {import('../datos/niveles.js').Nivel} nivel @param {HTMLInputElement} casilla */
+/** Una persona marcó o desmarcó un hábito bueno o un descuido. @param {import('../datos/niveles.js').Nivel} nivel @param {HTMLInputElement} casilla */
 function alMarcar(nivel, casilla) {
-  const { completa, jugada, insigniaNueva } = registrarMarca(S, nivel, casilla.id.slice(2), casilla.checked, hoy());
-  if (completa) {
-    programar(jugada);
-    construirLista(nivel); // ya empieza la siguiente jugada
-  } else if (insigniaNueva !== null) {
-    avisar(`¡Nueva insignia: ${INSIGNIAS[insigniaNueva].nombre}!`); // subió de insignia sin cerrar una jugada
-  }
+  const id = casilla.id.slice(2);
+  const malo = esHabitoMalo(id);
+  const res = registrarMarca(S, nivel, id, casilla.checked, hoy());
+  sonar(casilla.checked ? (malo ? 'mal' : 'bien') : 'quitar');
+  if (res.resultado === 'victoria') programar({ tipo: 'victoria', ...res.victoria });
+  else if (res.resultado === 'derrota') programar({ tipo: 'derrota', ...res.derrota });
+  if (res.resultado) construirLista(nivel); // empieza la jugada siguiente (o se repite la misma)
+  else if (res.insigniaNueva !== null) avisar(`¡Nueva insignia: ${INSIGNIAS[res.insigniaNueva].nombre}!`); // subió de insignia sin cerrar una jugada
+
   guardar();
   renderTodo();
-  if (casilla.checked) lanzarSenal(nivel, zonas[nivel.id], completa);
-  if (completa) {
-    // Se deja ver caer al enemigo antes de mostrar la insignia y los hábitos nuevos.
+  if (casilla.checked) {
+    if (malo) lanzarAtaque(nivel, zonas[nivel.id], res.resultado === 'derrota');
+    else lanzarSenal(nivel, zonas[nivel.id], res.resultado === 'victoria');
+  }
+  if (res.resultado) {
+    // Se deja ver el golpe final antes de mostrar la ventana de victoria o de derrota.
     setTimeout(() => { if (!hayVentana()) mostrarPendiente(); }, reducirMovimiento ? 0 : TIEMPOS.esperaAntesDeVentanasMs);
   }
 }
@@ -97,33 +121,51 @@ function crearTarjetaDeNivel(nivel) {
   arena.append(izquierda, vs, derecha);
   caja.appendChild(arena);
 
+  // Vida del enemigo (se apaga con tus hábitos buenos) y vida del salvador (se apaga con tus descuidos).
   const filaVida = el('div', 'hp-row');
   filaVida.appendChild(el('span', null, `Vida de ${ENEMIGOS[nivel.enemigo].nombre}`));
   const vidaTxt = el('span', null, '');
   filaVida.appendChild(vidaTxt);
   caja.appendChild(filaVida);
-
   const vida = el('div', 'hp');
   vida.setAttribute('aria-hidden', 'true');
   caja.appendChild(vida);
+
+  const nombreAliado = nivel.agentes.length > 1 ? 'tus salvadores' : AGENTES[nivel.agentes[0]].nombre;
+  const filaVidaAliada = el('div', 'hp-row ally');
+  filaVidaAliada.appendChild(el('span', null, `Vida de ${nombreAliado}`));
+  const vidaAliadaTxt = el('span', null, '');
+  filaVidaAliada.appendChild(vidaAliadaTxt);
+  caja.appendChild(filaVidaAliada);
+  const vidaAliada = el('div', 'hp ally');
+  vidaAliada.setAttribute('aria-hidden', 'true');
+  caja.appendChild(vidaAliada);
 
   const mensaje = el('div', 'msg');
   mensaje.setAttribute('aria-live', 'polite');
   caja.appendChild(mensaje);
 
-  const lista = el('ul', 'retos');
   let preparacion = null;
   if (nivel.preparacion) { // medidor «¿estás listo?» (nivel Fuego)
     preparacion = el('div', 'ready');
     caja.appendChild(preparacion);
   }
-  caja.appendChild(lista);
 
-  zonas[nivel.id] = { caja, nivelTxt, insigniaTxt, arena, izquierda, derecha, vidaTxt, vida, mensaje, preparacion, lista };
-  lista.addEventListener('change', (e) => {
+  caja.appendChild(el('h3', 'lista-t', `Hábitos que hieren a ${ENEMIGOS[nivel.enemigo].nombre}`));
+  const lista = el('ul', 'retos');
+  caja.appendChild(lista);
+  const tituloMalos = el('h3', 'lista-t malo', '¿Caíste en algún descuido hoy? Reconocerlo fortalece al enemigo');
+  caja.appendChild(tituloMalos);
+  const listaMalos = el('ul', 'retos malos');
+  caja.appendChild(listaMalos);
+
+  zonas[nivel.id] = { caja, nivelTxt, insigniaTxt, arena, izquierda, derecha, vidaTxt, vida, vidaAliadaTxt, vidaAliada, mensaje, preparacion, lista, listaMalos };
+  const alCambiar = (e) => {
     const casilla = /** @type {HTMLInputElement} */ (e.target);
     if (casilla && casilla.type === 'checkbox') alMarcar(nivel, casilla);
-  });
+  };
+  lista.addEventListener('change', alCambiar);
+  listaMalos.addEventListener('change', alCambiar);
   return caja;
 }
 
@@ -154,41 +196,53 @@ function pintarInsignia(fila) {
   const xp = xpDe(S);
   const i = indiceInsignia(xp);
   const siguiente = INSIGNIAS[i + 1];
-  const premio = `+${HABITOS_POR_JUGADA * XP_POR_HABITO} XP al completar los ${HABITOS_POR_JUGADA} hábitos`;
+  const premio = `+${BUENOS_POR_JUGADA * XP_POR_HABITO} XP al ganar la jugada (${BUENOS_POR_JUGADA} hábitos buenos)`;
   const texto = el('span', null, siguiente
     ? `${premio} · te faltan ${siguiente.xp - xp} XP para la insignia ${siguiente.nombre}`
     : `${premio} · tienes la insignia más alta: ${INSIGNIAS[i].nombre}`);
   fila.replaceChildren(crearInsignia(i, { tamano: 'mini' }), texto);
 }
 
+/** Mensaje del salvador: avisa si el enemigo se está fortaleciendo. */
+function frasePara(nivel, hechos, malos) {
+  const enemigo = ENEMIGOS[nivel.enemigo].nombre;
+  if (malos >= 2) return `¡Cuidado! ${enemigo} se fortalece: con ${MALOS_POR_JUGADA - malos} descuido más, tu salvador cae.`;
+  if (malos === 1) return `${enemigo} se hizo más fuerte con ese descuido. Compénsalo con hábitos buenos.`;
+  return hechos === 0 ? nivel.textos.inicio : nivel.textos.medio;
+}
+
 /** Redibuja el estado de todos los niveles y los indicadores del día. */
 export function renderRetos() {
   NIVELES.forEach((nivel, indice) => {
     const zona = zonas[nivel.id];
-    const activos = habitosActivos(S, nivel);
+    const { buenos, malos } = loteActivo(S, nivel);
     const jugada = jugadaDe(S, nivel);
-    const hechos = hechosEnJugada(S, nivel);
-    const total = activos.length;
+    const vida = vidaDeJugada(S, nivel);
+    const hechos = BUENOS_POR_JUGADA - vida.enemigo;
+    const reconocidos = MALOS_POR_JUGADA - vida.salvador;
 
-    zona.nivelTxt.textContent = `Nivel ${indice + 1} de ${NIVELES.length} · ${nivel.nombre} · Jugada ${jugada.r}`;
+    zona.nivelTxt.textContent = `Nivel ${indice + 1} de ${NIVELES.length} · ${nivel.nombre} · Jugada ${jugada.r}${jugada.l ? ` · intento ${jugada.l + 1}` : ''}`;
     pintarInsignia(zona.insigniaTxt);
-    activos.forEach((h) => { /** @type {HTMLInputElement} */ ($(`#r-${h.id}`)).checked = jugada.done.includes(h.id); });
+    buenos.forEach((h) => { /** @type {HTMLInputElement} */ ($(`#r-${h.id}`)).checked = jugada.done.includes(h.id); });
+    malos.forEach((h) => { /** @type {HTMLInputElement} */ ($(`#r-${h.id}`)).checked = jugada.mal.includes(h.id); });
     $$('i', zona.vida).forEach((segmento, i) => segmento.classList.toggle('off', i < hechos));
-    zona.vidaTxt.textContent = `${total - hechos}/${total}`;
-    zona.caja.classList.toggle('out', hechos === total);
+    $$('i', zona.vidaAliada).forEach((segmento, i) => segmento.classList.toggle('off', i < reconocidos));
+    zona.vidaTxt.textContent = `${vida.enemigo}/${BUENOS_POR_JUGADA}`;
+    zona.vidaAliadaTxt.textContent = `${vida.salvador}/${MALOS_POR_JUGADA}`;
+    zona.caja.style.setProperty('--mal', String(reconocidos)); // el enemigo crece y el salvador se debilita (CSS)
+    zona.caja.dataset.mal = String(reconocidos);
     if (zona.preparacion) pintarPreparacion(nivel, zona);
 
-    const frase = hechos === 0 ? nivel.textos.inicio : (hechos === total ? nivel.textos.victoria : nivel.textos.medio);
     const quien = `EL JEFE · ${nivel.agentes.length > 1 ? 'tus salvadores' : AGENTES[nivel.agentes[0]].nombre}`;
     zona.mensaje.innerHTML = '<small></small><span></span>';
-    $('small', zona.mensaje).textContent = `${quien} · ${hechos} de ${total} en esta jugada`;
-    $('span', zona.mensaje).textContent = frase;
+    $('small', zona.mensaje).textContent = `${quien} · ${hechos} de ${BUENOS_POR_JUGADA} buenos · ${reconocidos} de ${MALOS_POR_JUGADA} descuidos`;
+    $('span', zona.mensaje).textContent = frasePara(nivel, hechos, reconocidos);
   });
 
   const racha = rachaDe(S.days);
   pintarKpis($('#today'), [
-    [(S.days[hoy()] || []).length, 'Hábitos hoy'],
-    [jugadasCompletas(S), 'Jugadas completadas'],
+    [buenosDe(S.days[hoy()] || []).length, 'Hábitos buenos hoy'],
+    [jugadasCompletas(S), 'Jugadas ganadas'],
     [diasTexto(racha), 'Racha'],
     [`${xpDe(S)} XP`, 'Experiencia'],
   ]);

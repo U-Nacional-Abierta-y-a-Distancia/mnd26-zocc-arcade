@@ -1,9 +1,10 @@
 /**
- * Banco de hábitos: 18 por nivel (3 jugadas de 6). Cada nivel muestra una jugada a la vez; al cumplir sus
- * 6 hábitos pasa a la siguiente y, tras la tercera, vuelve a la primera (repaso).
+ * Banco de hábitos BUENOS: 18 por nivel (6 jugadas de 3). Cada jugada toma 3 hábitos buenos (y los 3 descuidos del
+ * mismo lote, ver `habitos-malos.js`); al ganarla pasa a la siguiente y, tras la sexta, vuelve a la primera (repaso).
  *
  * Para AÑADIR un hábito: agrégalo al final de la lista de su nivel con un `id` nuevo y único (nunca reutilices
- * un id: el progreso guardado se identifica por él) y mantén la cantidad en múltiplos de 6.
+ * un id: el progreso guardado se identifica por él), mantén la cantidad en múltiplos de 3 y agrega también su
+ * descuido opuesto en `habitos-malos.js` (los dos bancos deben tener el mismo tamaño).
  *
  * @module datos/habitos
  */

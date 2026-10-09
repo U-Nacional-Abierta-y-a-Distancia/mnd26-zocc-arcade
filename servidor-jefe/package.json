@@ -2,7 +2,7 @@
   "name": "servidor-jefe",
   "version": "1.0.0",
   "private": true,
-  "description": "Servidor intermedio que conecta el chat EL JEFE de «¿Y si pasa hoy?» con Claude, sin exponer la clave en la página.",
+  "description": "Servidor intermedio que conecta el chat EL JEFE de «NIDO» con Claude, sin exponer la clave en la página.",
   "type": "module",
   "engines": { "node": ">=20.6" },
   "scripts": {

@@ -2,7 +2,7 @@
  * Sección Ranking (progreso personal, con la escalera de insignias) y el indicador de insignia de la cabecera.
  * @module ui/ranking
  */
-import { HABITOS_POR_JUGADA, XP_POR_HABITO } from '../config.js';
+import { BUENOS_POR_JUGADA, XP_POR_HABITO } from '../config.js';
 import { INSIGNIAS } from '../datos/insignias.js';
 import { indiceInsignia, marcasTotales, rachaDe, xpDe } from '../dominio/progreso.js';
 import { dominioSemanal, ultimosDias } from '../dominio/ranking.js';
@@ -75,7 +75,7 @@ export function renderRanking() {
   // Escalera de insignias: las ganadas en color, las que faltan apagadas
   const escalera = $('#ladder');
   escalera.innerHTML = '';
-  const xpPorJugada = HABITOS_POR_JUGADA * XP_POR_HABITO;
+  const xpPorJugada = BUENOS_POR_JUGADA * XP_POR_HABITO;
   INSIGNIAS.forEach((ins, j) => {
     const fila = el('li', (j <= i ? 'got' : '') + (j === i ? ' now' : ''));
     fila.appendChild(crearInsignia(j, { bloqueada: j > i }));

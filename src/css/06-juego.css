@@ -1,6 +1,6 @@
 /* ======================================================================
    Zona de juego: Retos
-   Contenedor de la app, indicadores del día y tarjeta de cada nivel (arena, vida del enemigo, lista de hábitos, animación de combate).
+   Contenedor de la app, indicadores del día y tarjeta de cada nivel (arena, vida del enemigo y del salvador, hábitos buenos y descuidos, animación de combate).
    ====================================================================== */
 /* ---------- App ---------- */
 .app{padding-block:clamp(24px,4vw,48px) clamp(40px,6vw,80px)}
@@ -20,10 +20,20 @@
 .hp i.off{background:transparent;box-shadow:none;border:1px solid rgba(255,138,61,.35)}
 .hp-row{display:flex;justify-content:space-between;gap:10px;padding:12px 18px 8px;font-family:var(--font-display);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase}
 .hp-row span:first-child{color:var(--foe)}
-.zone.out .fighter.foe .pic{filter:grayscale(1) brightness(.55);opacity:.6}
+.hp-row.ally span:first-child{color:var(--cyan)}
+.hp.ally i{background:var(--cyan);box-shadow:0 0 10px rgba(153,255,255,.45)}
+.hp.ally i.off{background:transparent;box-shadow:none;border:1px solid rgba(153,255,255,.3)}
+.hp-row.ally{padding-top:4px}
+/* Cada descuido reconocido (--mal, de 0 a 3) agranda al enemigo y debilita al salvador. */
+.zone .fighter.foe .pic{scale:calc(1 + var(--mal,0) * .1);transition:scale .35s ease}
+.zone .fighter:not(.foe) .pic{opacity:calc(1 - var(--mal,0) * .16);transition:opacity .35s ease}
+.zone[data-mal="2"] .fighter.foe .pic{filter:drop-shadow(0 0 22px rgba(255,138,61,.8))}
 .zone .msg{margin:14px 18px 0;border-left:4px solid var(--cyan);padding:4px 0 4px 14px;font-size:.9rem;color:#e6eaea;min-height:3.2em}
 .zone .msg small{display:block;font-family:var(--font-display);font-size:.56rem;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan);margin-bottom:2px}
-.retos{list-style:none;margin:0;padding:14px 18px 18px;display:grid;gap:8px}
+.retos{list-style:none;margin:0;padding:6px 18px 14px;display:grid;gap:8px}
+.lista-t{margin:14px 18px 0;padding-bottom:6px;border-bottom:1px solid var(--line);font-family:var(--font-display);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--cyan);font-weight:700}
+.lista-t.malo{color:var(--foe)}
+.retos.malos{padding-bottom:18px}
 .reto input{position:absolute;opacity:0;pointer-events:none}
 .reto label{display:grid;grid-template-columns:36px 1fr 26px;gap:12px;align-items:center;min-height:56px;padding:8px 12px;border:1px solid var(--line);background:var(--panel);cursor:pointer;transition:border-color .2s,background .2s}
 .reto label:hover{border-color:var(--cyan)}
@@ -35,6 +45,15 @@
 .reto input:checked + label{background:var(--cyan-soft);border-color:var(--cyan)}
 .reto input:checked + label .chk{background:var(--cyan);border-color:var(--cyan)}
 .reto input:checked + label .chk::after{content:"";width:12px;height:12px;background:var(--void)}
+/* Descuidos: mismo diseño, en el color de los enemigos. */
+.reto.malo label{border-color:rgba(255,138,61,.28)}
+.reto.malo label:hover{border-color:var(--foe)}
+.reto.malo img{filter:drop-shadow(0 0 5px rgba(255,138,61,.5)) grayscale(.2)}
+.reto.malo .xp{color:var(--foe)}
+.reto.malo input:focus-visible + label{outline-color:var(--foe)}
+.reto.malo .chk{border-color:rgba(255,138,61,.5)}
+.reto.malo input:checked + label{background:rgba(255,138,61,.1);border-color:var(--foe)}
+.reto.malo input:checked + label .chk{background:var(--foe);border-color:var(--foe)}
 
 /* Subtítulos de grupo en la lista (nivel Fuego) y medidor «¿Estás listo?» */
 .retos .rg{list-style:none;font-family:var(--font-display);font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan);padding:14px 2px 4px;border-bottom:1px solid var(--line)}
