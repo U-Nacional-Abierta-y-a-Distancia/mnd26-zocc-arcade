@@ -146,7 +146,8 @@ Cuando reconoces un **descuido**, pasa al revés: el **enemigo se agranda y lanz
 Las animaciones **suenan**: cada salvador tiene el sonido de su señal (gotas, rayo eléctrico, bruma, espuma, ondas graves), y hay sonidos para marcar un hábito, reconocer un descuido, el impacto, la caída del enemigo o del salvador, la victoria (con un destello extra si ganas una insignia), la derrota y la narrativa de EL JEFE.
 
 - El botón de **altavoz** del encabezado (junto al menú) **silencia o activa** el sonido; también está la casilla «Efectos de sonido» en la narrativa. Se recuerda en tu dispositivo.
-- Los sonidos son **efectos suaves y cortos**, no música, y se generan en tu dispositivo (no se descarga nada). El navegador solo deja sonar después de que tocas la pantalla, así que el primer sonido llega con tu primera acción.
+- **Música de fondo:** suena una pista suave en bucle, una para la portada y las secciones tranquilas, otra para los **Retos** y otra para la narrativa de EL JEFE. Baja el volumen cuando EL JEFE habla y se apaga con el mismo botón de altavoz. Empieza cuando tocas la pantalla por primera vez.
+- Los **efectos** son sonidos suaves y cortos que se generan en tu dispositivo (no se descarga nada). El navegador solo deja sonar después de que tocas la pantalla, así que el primer sonido llega con tu primera acción.
 - Los mismos sonidos existen como **archivos de audio etiquetados** por la parte del juego (carpeta `src/assets/audio/`, con su `LEEME.md`) para escucharlos o reutilizarlos.
 
 ### 4.5 Nivel Fuego: prevención y preparación

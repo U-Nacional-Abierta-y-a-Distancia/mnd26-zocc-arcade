@@ -21,6 +21,7 @@ import { iniciarSonido } from './ui/sonido.js';
 import { iniciarChat } from './ui/chat/panel.js';
 import { iniciarInstalacion, registrarServiceWorker } from './ui/instalacion.js';
 import { iniciarMochila } from './ui/mochila.js';
+import { iniciarMusica } from './ui/musica.js';
 import { iniciarNavegacion, ir } from './ui/navegacion.js';
 import { iniciarPresentacion } from './ui/presentacion.js';
 import { iniciarReinicio } from './ui/ranking.js';
@@ -34,6 +35,7 @@ montarTarjetas();         // 2. tarjetas de personajes (portada y Agentes)
 iniciarRetos();           // 3. tarjetas de los cinco niveles
 iniciarMochila();
 iniciarSonido();          // botón de sonido y efectos
+iniciarMusica();          // música de fondo (respeta el botón de sonido)
 iniciarCaso();            // narrativa «¿Tu familia está lista?» (botones con data-caso)
 iniciarReinicio();
 iniciarChat();            // 4. EL JEFE (personaje flotante y chat)

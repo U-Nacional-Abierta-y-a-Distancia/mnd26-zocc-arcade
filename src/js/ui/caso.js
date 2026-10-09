@@ -28,8 +28,9 @@ import {
 } from './narrador.js';
 import { abrirVentana, cerrarVentana, hayVentana } from './ventanas.js';
 
-/** Espera antes de abrir la narrativa al entrar, para que se vea el juego detrás (ms). */
+/** Espera antes de abrir la narrativa al entrar, para que se vea lo que hay detrás (ms); es mayor desde la presentación, que se desvanece en 0,5 s. */
 const ESPERA_AL_ENTRAR_MS = 350;
+const ESPERA_DESDE_PRESENTACION_MS = 700;
 
 /* ------------------------------------------------------------------ preferencia «no volver a mostrar» */
 
@@ -360,9 +361,16 @@ export function iniciarCaso() {
     e.preventDefault();
     abrirCaso();
   });
-  // Al pulsar «Entrar al juego» desde la portada: primero la narrativa (si no se pidió omitirla).
-  alEntrarAlJuego(() => {
-    if (estaOculto()) return;
-    window.setTimeout(() => { if (!hayVentana()) abrirCaso(); }, ESPERA_AL_ENTRAR_MS);
+  // Al pulsar «Entrar al juego» (en la presentación o en la portada): primero la narrativa, una sola vez por visita
+  // y salvo que se haya pedido omitirla.
+  let yaSeMostro = false;
+  const abrirAlEntrar = (esperaMs) => {
+    if (estaOculto() || yaSeMostro) return;
+    yaSeMostro = true;
+    window.setTimeout(() => { if (!hayVentana()) abrirCaso(); }, esperaMs);
+  };
+  alEntrarAlJuego(() => abrirAlEntrar(ESPERA_AL_ENTRAR_MS));
+  document.addEventListener('click', (e) => {
+    if (/** @type {HTMLElement} */ (e.target).closest('.sp-enter')) abrirAlEntrar(ESPERA_DESDE_PRESENTACION_MS);
   });
 }

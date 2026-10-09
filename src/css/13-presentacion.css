@@ -33,3 +33,6 @@ body.splash-on{overflow:hidden}
 .sp-enter{margin-top:6px}
 @media (max-height:620px){.sp-logo{max-height:28vh}.sp-olimp{width:84px}.sp-stage{gap:8px;padding-top:50px}}
 @media (prefers-reduced-motion:reduce){#splash,.sp-stage.on,.sp-block,.sp-chips{transition:none;animation:none}}
+.sp-sonido{position:absolute;left:0;right:0;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:2;margin:0;text-align:center;font-family:var(--font-display);font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--cyan);opacity:.85;animation:sp-pulso 2s ease-in-out infinite}
+@keyframes sp-pulso{50%{opacity:.35}}
+@media (prefers-reduced-motion:reduce){.sp-sonido{animation:none}}

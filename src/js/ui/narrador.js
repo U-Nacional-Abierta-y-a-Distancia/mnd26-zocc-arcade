@@ -11,10 +11,21 @@
  *
  * @module ui/narrador
  */
+import { audioIncrustado } from '../util/audio-incrustado.js';
 import { elegirVoz, paraVoz, partirEnFrases } from '../util/voz.js';
 
-/** Carpeta de los audios de la narración y extensiones que se buscan (en este orden). */
-const CARPETA_AUDIOS = 'assets/audio/narrador';
+/**
+ * Carpetas de los audios de la narración y extensiones que se buscan (en este orden). La segunda carpeta cubre el juego abierto
+ * con doble clic desde `nido.html`, que queda junto a `src/` y no dentro de ella.
+ */
+const CARPETAS_AUDIOS = ['assets/audio/narrador', 'src/assets/audio/narrador'];
+
+/** Direcciones donde se busca el audio `<id>`: primero el incrustado en `nido.html` (si lo hay) y luego los archivos sueltos. @param {string} id @returns {string[]} */
+function direccionesDe(id) {
+  const incrustados = EXTENSIONES.map((ext) => audioIncrustado(`narrador/${id}.${ext}`)).filter((d) => d !== null);
+  const sueltos = CARPETAS_AUDIOS.flatMap((carpeta) => EXTENSIONES.map((ext) => `${carpeta}/${id}.${ext}`));
+  return [...incrustados, ...sueltos];
+}
 const EXTENSIONES = ['mp3', 'ogg', 'wav'];
 
 /** Idioma que se pide si el dispositivo no ofrece una voz en español identificable. */
@@ -61,10 +72,11 @@ export function cambiarVelocidad(velocidad) {
  */
 function reproducirArchivo(id, velocidad, miTurno, alTerminar, sinArchivo) {
   let i = 0;
+  const direcciones = direccionesDe(id);
   const probar = () => {
     if (miTurno !== turno) return;
-    if (i >= EXTENSIONES.length) { audioActual = null; sinArchivo(); return; }
-    const audio = new Audio(`${CARPETA_AUDIOS}/${id}.${EXTENSIONES[i]}`);
+    if (i >= direcciones.length) { audioActual = null; sinArchivo(); return; }
+    const audio = new Audio(direcciones[i]);
     i += 1;
     audio.playbackRate = velocidad;
     audio.preservesPitch = true;

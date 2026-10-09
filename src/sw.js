@@ -10,7 +10,7 @@
  *
  * No intercepta `/api/` (el chat con la IA) ni `/downloads/`, ni peticiones a otros dominios.
  */
-const VERSION = 'ysph-v17';
+const VERSION = 'ysph-v20';
 
 /** Archivos que se guardan al instalar (rutas relativas a este archivo). */
 const NUCLEO = [
@@ -43,11 +43,13 @@ const NUCLEO = [
   'js/datos/ilustraciones.js',
   'js/datos/insignias.js',
   'js/datos/mochila.js',
+  'js/datos/musica.js',
   'js/datos/niveles.js',
   'js/datos/sonidos.js',
   'js/datos/sprites.js',
   'js/dominio/chat.js',
   'js/dominio/familia.js',
+  'js/dominio/musica.js',
   'js/dominio/progreso.js',
   'js/dominio/ranking.js',
   'js/estado/almacen.js',
@@ -64,6 +66,7 @@ const NUCLEO = [
   'js/ui/instalacion.js',
   'js/ui/kpis.js',
   'js/ui/mochila.js',
+  'js/ui/musica.js',
   'js/ui/narrador.js',
   'js/ui/navegacion.js',
   'js/ui/particulas.js',
@@ -75,6 +78,7 @@ const NUCLEO = [
   'js/ui/sprites.js',
   'js/ui/tarjetas.js',
   'js/ui/ventanas.js',
+  'js/util/audio-incrustado.js',
   'js/util/dom.js',
   'js/util/fecha.js',
   'js/util/texto.js',

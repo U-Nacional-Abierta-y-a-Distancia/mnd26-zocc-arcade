@@ -31,7 +31,7 @@
 
 | Carpeta / archivo                   | Contenido                                                                                                                                    |
 | ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| `[nido.html](nido.html)`            | **El juego completo en un solo archivo.** Se abre con doble clic; no necesita instalar nada.                                                 |
+| `[nido.html](nido.html)`            | **El juego completo en un solo archivo, con la música y la narración de EL JEFE incluidas (38 MB).** Se abre con doble clic; no necesita instalar nada ni la carpeta `src/`.                                                 |
 | `[src/](src)`                       | **El juego** (HTML + CSS + JavaScript sin dependencias ni paso de compilación) con sus imágenes y la narración de EL JEFE. Se puede publicar tal cual en cualquier hosting de archivos. |
 | `[servidor-jefe/](servidor-jefe)`   | Servidor Node que entrega el juego y conecta el chat de EL JEFE con Claude sin exponer la clave. Opcional. Su personalidad y reglas están en `prompt-jefe.md`. |
 | `[docs/](docs)`                     | Manual de usuario.                                                                                                                           |
@@ -65,7 +65,7 @@ Requisitos: **Node.js 20.6 o superior** (solo para el servidor; el juego en sí 
 - **Demo web:** si su producto se ve en el navegador (web, scrollytelling, WebGL), ponga los archivos en la carpeta `docs/`, con un `index.html` en `docs/`. Quedará en `https://u-nacional-abierta-y-a-distancia.github.io/<nombre-de-este-repositorio>/`.
 - **Archivos pesados** (video del pitch, builds, audio): van en el Release **entrega-zonal** (botón *Releases*, a la derecha).
 - Instrucciones para ejecutarlo:
-  1. **Más simple:** abra `nido.html` con doble clic (el chat de EL JEFE usa respuestas predefinidas).
+  1. **Más simple:** abra `nido.html` con doble clic: suena la música y EL JEFE narra con su voz. El chat de EL JEFE usa respuestas predefinidas. En algunos navegadores el sonido empieza con el primer toque en la pantalla.
   2. **Con servidor:** `cd servidor-jefe && npm install`, luego `npm start` en esta carpeta y abra `http://localhost:3000`. Permite instalarlo como app y conectar la IA.
 
 
@@ -80,7 +80,7 @@ Requisitos: **Node.js 20.6 o superior** (solo para el servidor; el juego en sí 
 | `@anthropic-ai/sdk` (servidor)  | Anthropic                              | MIT                                                              |
 | Logos de UNAD y de las Olimpiadas Unadistas | UNAD                       | Proporcionados por la organización de la maratón                 |
 
-Los efectos de sonido se sintetizan en el propio juego. **Por confirmar por el equipo antes de publicar:** autoría y herramienta de las ilustraciones (EL JEFE, salvadores y enemigos) y de la voz de la narración (`src/assets/audio/narrador/`).
+Los efectos de sonido se sintetizan en el propio juego. La música de fondo son tres pistas en `src/assets/audio/musica/` (portada, retos y narrativa). **Por confirmar por el equipo antes de publicar:** autoría y licencia de la música de fondo, y autoría y herramienta de las ilustraciones (EL JEFE, salvadores y enemigos) y de la voz de la narración (`src/assets/audio/narrador/`).
 
 
 
