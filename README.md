@@ -7,13 +7,13 @@
 > Maratón de Innovación en Narrativas Digitales · Segundas Olimpiadas Unadistas 2026 · Fase zonal
 
 
-| Campo                                            | Respuesta                                                                                                        |
-| ------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------- |
-| Equipo                                           | ARCADE                                                                                                           |
-| Zona / Centro(s)                                 | ZOCC                                                                                                             |
-| Tipo de producto (Tabla 1 del documento técnico) | Web Interactiva                                                                                                  |
-| Integrantes (solo nombres completos)             | Jaime Jose García Villa, Natalia Elizabeth Perez Cabrera, Henry Leonardo Borrero Lopez, Valentina Rengifo Correa |
-| Enlace al demo web (si aplica)                   |                                                                                                                  |
+| Campo                                            | Respuesta                                                                                                                                     |
+| ------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| Equipo                                           | ARCADE                                                                                                                                        |
+| Zona / Centro(s)                                 | ZOCC                                                                                                                                          |
+| Tipo de producto (Tabla 1 del documento técnico) | Web Interactiva                                                                                                                               |
+| Integrantes (solo nombres completos)             | Jaime Jose García Villa, Natalia Elizabeth Perez Cabrera, Henry Leonardo Borrero Lopez, Valentina Rengifo Correa, Nelson Augusto Serna Porras |
+| Enlace al demo web (si aplica)                   |                                                                                                                                               |
 
 
 **No escriba aquí cédulas, teléfonos ni correos.** Este repositorio se hace público el viernes 9 de octubre a las 12:00 m.
@@ -26,15 +26,17 @@
 - **Familia:** cada integrante juega con su *nickname* y el ranking familiar muestra quién lidera y quién necesita ayuda; se puede enviar ánimo.
 - **EL JEFE:** narra el caso hipotético «¿Tu familia está lista?» con voz y, desde un personaje flotante, abre un chat de apoyo. Conversa con IA si hay un servidor conectado; si no, responde con frases predefinidas. Las emergencias siempre se responden en el momento, sin esperar a la IA.
 
+
+
 ## Qué hay en cada carpeta
 
 
-| Carpeta / archivo                   | Contenido                                                                                                                                    |
-| ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| `[nido.html](nido.html)`            | **El juego completo en un solo archivo, con la música y la narración de EL JEFE incluidas (38 MB).** Se abre con doble clic; no necesita instalar nada ni la carpeta `src/`.                                                 |
-| `[src/](src)`                       | **El juego** (HTML + CSS + JavaScript sin dependencias ni paso de compilación) con sus imágenes y la narración de EL JEFE. Se puede publicar tal cual en cualquier hosting de archivos. |
-| `[servidor-jefe/](servidor-jefe)`   | Servidor Node que entrega el juego y conecta el chat de EL JEFE con Claude sin exponer la clave. Opcional. Su personalidad y reglas están en `prompt-jefe.md`. |
-| `[docs/](docs)`                     | Manual de usuario.                                                                                                                           |
+| Carpeta / archivo                 | Contenido                                                                                                                                                                               |
+| --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `[nido.html](nido.html)`          | **El juego completo en un solo archivo, con la música y la narración de EL JEFE incluidas (38 MB).** Se abre con doble clic; no necesita instalar nada ni la carpeta `src/`.            |
+| `[src/](src)`                     | **El juego** (HTML + CSS + JavaScript sin dependencias ni paso de compilación) con sus imágenes y la narración de EL JEFE. Se puede publicar tal cual en cualquier hosting de archivos. |
+| `[servidor-jefe/](servidor-jefe)` | Servidor Node que entrega el juego y conecta el chat de EL JEFE con Claude sin exponer la clave. Opcional. Su personalidad y reglas están en `prompt-jefe.md`.                          |
+| `[docs/](docs)`                   | Manual de usuario.                                                                                                                                                                      |
 
 
 
@@ -44,11 +46,11 @@
 Requisitos: **Node.js 20.6 o superior** (solo para el servidor; el juego en sí no instala nada).
 
 
-| Comando                                        | Qué hace                                                                                        |
-| ---------------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| `cd servidor-jefe && npm install`              | Una sola vez: instala la librería de Claude que usa el servidor.                                |
-| `npm start`                                    | Juego + chat en `http://localhost:3000` (el puerto se cambia con la variable `PORT`).           |
-| `ANTHROPIC_API_KEY=<clave> npm start`          | Igual, con EL JEFE conversando con IA. Sin clave, el juego funciona completo con respuestas predefinidas. |
+| Comando                               | Qué hace                                                                                                  |
+| ------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `cd servidor-jefe && npm install`     | Una sola vez: instala la librería de Claude que usa el servidor.                                          |
+| `npm start`                           | Juego + chat en `http://localhost:3000` (el puerto se cambia con la variable `PORT`).                     |
+| `ANTHROPIC_API_KEY=<clave> npm start` | Igual, con EL JEFE conversando con IA. Sin clave, el juego funciona completo con respuestas predefinidas. |
 
 
 
@@ -59,6 +61,8 @@ Requisitos: **Node.js 20.6 o superior** (solo para el servidor; el juego en sí 
 - **Ranking entre dispositivos:** hoy la familia comparte un dispositivo (todo se guarda en `localStorage`). Sincronizar requiere un servidor con base de datos.
 - **APK de Android:** propuesta futura (podría generarse con PWABuilder, Bubblewrap o Capacitor a partir de la PWA ya incluida).
 - **Herramienta de IA usada en la construcción:** Claude Code (Anthropic), para programar, probar y documentar el juego.
+
+
 
 ## Cómo ver o probar el producto
 
@@ -73,16 +77,15 @@ Requisitos: **Node.js 20.6 o superior** (solo para el servidor; el juego en sí 
 ## Créditos de recursos de terceros
 
 
-| Recurso                         | Autor                                  | Licencia o autorización                                          |
-| ------------------------------- | -------------------------------------- | ---------------------------------------------------------------- |
-| Tipografía Orbitron             | Matt McInerney                         | SIL Open Font License 1.1 (Google Fonts)                         |
-| Tipografía Poppins              | Indian Type Foundry                    | SIL Open Font License 1.1 (Google Fonts)                         |
-| `@anthropic-ai/sdk` (servidor)  | Anthropic                              | MIT                                                              |
-| Logos de UNAD y de las Olimpiadas Unadistas | UNAD                       | Proporcionados por la organización de la maratón                 |
+| Recurso                                     | Autor               | Licencia o autorización                          |
+| ------------------------------------------- | ------------------- | ------------------------------------------------ |
+| Tipografía Orbitron                         | Matt McInerney      | SIL Open Font License 1.1 (Google Fonts)         |
+| Tipografía Poppins                          | Indian Type Foundry | SIL Open Font License 1.1 (Google Fonts)         |
+| `@anthropic-ai/sdk` (servidor)              | Anthropic           | MIT                                              |
+| Logos de UNAD y de las Olimpiadas Unadistas | UNAD                | Proporcionados por la organización de la maratón |
+
 
 Los efectos de sonido se sintetizan en el propio juego. La música de fondo son tres pistas en `src/assets/audio/musica/` (portada, retos y narrativa). **Por confirmar por el equipo antes de publicar:** autoría y licencia de la música de fondo, y autoría y herramienta de las ilustraciones (EL JEFE, salvadores y enemigos) y de la voz de la narración (`src/assets/audio/narrador/`).
-
-
 
 ## Derechos
 
